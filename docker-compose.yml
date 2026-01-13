@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  # Frontend Application (React/Vite served via Nginx)
+  web:
+    build: .
+    restart: always
+    ports:
+      - "3000:80"
+    environment:
+      - VITE_API_URL=http://localhost:3000
+    depends_on:
+      - db
+    networks:
+      - rodetes-net
+
+  # Database Service (PostgreSQL) - Persistent Storage
+  db:
+    image: postgres:15-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: ${DB_USER:-rodetes}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-partysecure}
+      POSTGRES_DB: ${DB_NAME:-rodetesdb}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - rodetes-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U rodetes"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  rodetes-net:
+    driver: bridge
