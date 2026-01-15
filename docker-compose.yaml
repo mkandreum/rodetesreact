@@ -14,8 +14,7 @@ services:
     restart: always
     expose:
       - "3000"
-    ports:
-      - "80:3000" # Expose container port 3000 as host port 80 for Coolify/Traefik
+    ports: # - "80:3000" # REMOVED: Managed by Coolify
     depends_on:
       db:
         condition: service_healthy
@@ -51,7 +50,7 @@ services:
     networks:
       - rodetes-net
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U ${DB_USER:-rodetes}" ]
+      test: [ "CMD-SHELL", "pg_isready -U ${DB_USER:-rodetes} -d ${DB_NAME:-rodetesdb}" ]
       interval: 10s
       timeout: 5s
       retries: 5
