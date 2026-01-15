@@ -75,9 +75,18 @@ app.use('/api/backup', backupRoutes);
 // Error Handling
 // ============================================
 
-// 404 handler
-app.use((req: Request, res: Response) => {
-    res.status(404).json({ error: 'Route not found' });
+// 404 handler for API routes
+app.use('/api/*', (req: Request, res: Response) => {
+    res.status(404).json({ error: 'API Route not found' });
+});
+
+// Serve React App (SPA)
+// In production, frontend build is copied to 'public' folder relative to this file
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Handle React Routing, return all other requests to React app
+app.get('*', (req: Request, res: Response) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 // Global error handler

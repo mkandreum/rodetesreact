@@ -4,42 +4,24 @@ services:
   # ============================================
   # Frontend - React SPA served by Nginx
   # ============================================
-  frontend:
+  # ============================================
+  # Application (Frontend + Backend)
+  # ============================================
+  app:
     build:
       context: .
       dockerfile: Dockerfile
     restart: always
     expose:
-      - "80"
-    # Uncomment for local development:
-    # ports:
-    #   - "3000:80"
-    depends_on:
-      - backend
-    environment:
-      - VITE_API_URL=http://backend:3001
-    networks:
-      - rodetes-net
-
-  # ============================================
-  # Backend - Node.js/Express API Server
-  # ============================================
-  backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
-    restart: always
-    expose:
-      - "3001"
-    # Uncomment for local development:
-    # ports:
-    #   - "3001:3001"
+      - "3000"
+    ports:
+      - "80:3000" # Expose container port 3000 as host port 80 for Coolify/Traefik
     depends_on:
       db:
         condition: service_healthy
     environment:
       - NODE_ENV=production
-      - PORT=3001
+      - PORT=3000
       - DATABASE_URL=postgresql://${DB_USER:-rodetes}:${DB_PASSWORD:-partysecure}@db:5432/${DB_NAME:-rodetesdb}
       - JWT_SECRET=${JWT_SECRET:-change-this-in-production}
       - SESSION_SECRET=${SESSION_SECRET:-change-this-in-production}
