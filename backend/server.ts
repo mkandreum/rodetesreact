@@ -102,9 +102,10 @@ app.use((err: any, req: Request, res: Response, next: any) => {
 // Start Server
 // ============================================
 
-const server = app.listen(PORT, () => {
+const server = app.listen(Number(PORT), '0.0.0.0', () => {
     console.log(`✓ Server running on port ${PORT}`);
     console.log(`✓ Environment: ${process.env.NODE_ENV || 'development'}`);
+    console.log(`✓ Accessible at http://0.0.0.0:${PORT}`);
 });
 
 // Graceful shutdown

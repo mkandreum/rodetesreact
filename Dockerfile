@@ -39,8 +39,8 @@ COPY --from=frontend-builder /app/dist ./dist/public
 # Create uploads directory
 RUN mkdir -p uploads
 
-# Expose port 3000 (default for backend)
-EXPOSE 3000
+# Expose port 80 (Standard Web Port)
+EXPOSE 80
 
 # Start server
 CMD ["node", "dist/server.js"]
