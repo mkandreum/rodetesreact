@@ -113,7 +113,7 @@ export const AdminDrags: React.FC = () => {
                                             <img src={editingDrag.coverImageUrl} alt="Preview" className="h-full object-contain" />
                                         </div>
                                     )}
-                                    <FileUpload onUpload={(url) => setEditingDrag({ ...editingDrag, coverImageUrl: url })} label="SUBIR IMAGEN" />
+                                    <FileUpload onUpload={(url) => setEditingDrag({ ...editingDrag, coverImageUrl: url as string })} label="SUBIR IMAGEN" />
                                 </div>
                             </div>
                             <div><label className="text-sm font-pixel text-gray-400">DESCRIPCIÓN</label><textarea className="w-full bg-black border border-gray-700 p-2 text-white h-24 focus:border-party-500 outline-none" value={editingDrag.description || ''} onChange={e => setEditingDrag({ ...editingDrag, description: e.target.value })} /></div>

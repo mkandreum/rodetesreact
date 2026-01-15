@@ -17,7 +17,7 @@ body {
     background-color: var(--bg-dark);
     color: #e5e7eb;
     scroll-behavior: smooth;
-    padding-top: 128px;
+    /* padding-top: 128px; REMOVED for sticky layout */
     overflow-x: hidden;
     /* Prevent horizontal scroll from effects */
     position: relative;
@@ -147,6 +147,10 @@ button:not(:disabled).neon-btn:hover,
 
 /* --- Layout fixes & Components --- */
 
+/* Layout fixes & Components - ADAPTED FOR REACT */
+
+/* Header and Nav are handled by Layout.tsx using sticky positioning */
+/* 
 header {
     position: fixed;
     top: 0;
@@ -154,7 +158,6 @@ header {
     right: 0;
     z-index: 40;
     background-color: rgba(0, 0, 0, 0.9);
-    /* Slight transparency */
     backdrop-filter: blur(5px);
 }
 
@@ -171,10 +174,11 @@ header {
 #mobile-menu {
     top: 80px;
 }
+*/
 
 #next-event-promo-container {
-    flex-grow: 1;
-    min-width: 0;
+    /* flex-grow: 1; Conflict with w-full */
+    width: 100%;
     overflow: hidden;
     white-space: nowrap;
     box-sizing: border-box;

@@ -29,11 +29,11 @@ export const DragsPage: React.FC<DragsPageProps> = ({ onSelectMerch }) => {
                                 <p className="text-gray-300 font-sans mb-8 flex-grow leading-relaxed">{drag.description}</p>
 
                                 {/* Drag Merch Preview */}
-                                {drag.merchItems.length > 0 && (
+                                {(drag.merchItems?.length || 0) > 0 && (
                                     <div className="mt-auto pt-6 border-t border-gray-800">
                                         <h4 className="font-pixel text-xl mb-3 flex items-center gap-2"><Shirt size={16} /> MERCH EXCLUSIVO</h4>
                                         <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-thin">
-                                            {drag.merchItems.map(item => (
+                                            {drag.merchItems?.map(item => (
                                                 <div key={item.id} className="flex-shrink-0 w-32 cursor-pointer group"
                                                     onClick={() => onSelectMerch(item, drag)}
                                                 >

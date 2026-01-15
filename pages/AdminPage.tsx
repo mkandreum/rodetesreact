@@ -3,6 +3,7 @@ import { AdminEvents } from '../components/AdminEvents';
 import { AdminDrags } from '../components/AdminDrags';
 import { AdminMerch } from '../components/AdminMerch';
 import { AdminGallery } from '../components/AdminGallery';
+import { AdminGiveaway } from '../components/AdminGiveaway';
 import { AdminSettings } from '../components/AdminSettings';
 import { ModernLogin } from '../components/ModernLogin';
 
@@ -14,7 +15,7 @@ interface AdminPageProps {
 }
 
 export const AdminPage: React.FC<AdminPageProps> = ({ isAdminLoggedIn, onLogin, onLogout, onOpenScanner }) => {
-    const [adminSection, setAdminSection] = useState<'settings' | 'events' | 'drags' | 'merch' | 'gallery'>('events');
+    const [adminSection, setAdminSection] = useState<'settings' | 'events' | 'drags' | 'merch' | 'gallery' | 'giveaway'>('events');
 
     const handleLoginSubmit = async (username: string, password: string) => {
         // Create a fake FormEvent to match the expected signature
@@ -74,6 +75,13 @@ export const AdminPage: React.FC<AdminPageProps> = ({ isAdminLoggedIn, onLogin, 
                         >
                             Ajustes
                         </button>
+                        <button
+                            onClick={() => setAdminSection('giveaway')}
+                            className={`px-3 py-0.5 text-xs rounded-full font-pixel uppercase transition-all ${adminSection === 'giveaway' ? 'bg-pink-500 text-white' : 'bg-gray-900 text-gray-400 hover:text-white'
+                                }`}
+                        >
+                            Sorteo
+                        </button>
                     </div>
 
                     {/* Tab Content */}
@@ -82,6 +90,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ isAdminLoggedIn, onLogin, 
                         {adminSection === 'drags' && <AdminDrags />}
                         {adminSection === 'merch' && <AdminMerch />}
                         {adminSection === 'gallery' && <AdminGallery />}
+                        {adminSection === 'giveaway' && <AdminGiveaway />}
                         {adminSection === 'settings' && <AdminSettings />}
                     </div>
 

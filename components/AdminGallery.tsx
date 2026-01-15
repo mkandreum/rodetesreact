@@ -11,11 +11,12 @@ export const AdminGallery: React.FC = () => {
 
     const selectedEvent = state.events.find(e => e.id === Number(selectedEventId));
 
-    const handleAddImage = (url: string) => {
+    const handleAddImage = (urlOrUrls: string | string[]) => {
         if (!selectedEvent) return;
+        const newImages = Array.isArray(urlOrUrls) ? urlOrUrls : [urlOrUrls];
         const updated = {
             ...selectedEvent,
-            galleryImages: [...(selectedEvent.galleryImages || []), url]
+            galleryImages: [...(selectedEvent.galleryImages || []), ...newImages]
         };
         updateEvent(updated);
         // TODO: Trigger API save for this event immediately
@@ -63,8 +64,9 @@ export const AdminGallery: React.FC = () => {
                             <p className="text-gray-400 text-sm mb-4">Sube nuevas fotos a la galería de este evento.</p>
                             <FileUpload
                                 onUpload={handleAddImage}
-                                label="Subir Foto"
+                                label="Subir Foto(s)"
                                 className="w-full max-w-xs"
+                                multiple={true}
                             />
                         </div>
 

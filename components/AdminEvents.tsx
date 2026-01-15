@@ -4,10 +4,12 @@ import { Edit, Trash, Plus, X } from 'lucide-react';
 import { Event } from '../types';
 import { api } from '../services/api';
 import { FileUpload } from './FileUpload';
+import { TicketListModal } from './modals/TicketListModal';
 
 export const AdminEvents: React.FC = () => {
     const { state, updateState } = useStore(); // We'll need refresh or update actions
     const [editingEvent, setEditingEvent] = useState<Partial<Event> | null>(null);
+    const [viewingEvent, setViewingEvent] = useState<Event | null>(null);
     const [showModal, setShowModal] = useState(false);
 
     const handleDelete = async (id: number) => {
@@ -80,6 +82,13 @@ export const AdminEvents: React.FC = () => {
                         </div>
                         <div className="flex gap-2 w-full md:w-auto justify-end border-t md:border-t-0 border-gray-800 pt-3 md:pt-0 mt-1 md:mt-0">
                             <button
+                                onClick={() => setViewingEvent(e)}
+                                className="text-green-400 hover:text-green-300 p-2 border border-gray-800 hover:border-green-400 rounded-md"
+                                title="Ver Entradas"
+                            >
+                                <span className="font-pixel text-sm px-1">LISTA</span>
+                            </button>
+                            <button
                                 onClick={() => { setEditingEvent(e); setShowModal(true); }}
                                 className="text-blue-400 hover:text-blue-300 p-2 border border-gray-800 hover:border-blue-400 rounded-md"
                             >
@@ -120,7 +129,7 @@ export const AdminEvents: React.FC = () => {
                                             <img src={editingEvent.posterImageUrl} alt="Preview" className="h-full object-contain" />
                                         </div>
                                     )}
-                                    <FileUpload onUpload={(url) => setEditingEvent({ ...editingEvent, posterImageUrl: url })} label="SUBIR IMAGEN" />
+                                    <FileUpload onUpload={(url) => setEditingEvent({ ...editingEvent, posterImageUrl: url as string })} label="SUBIR IMAGEN" />
                                 </div>
                             </div>
                             <div><label className="text-sm font-pixel text-gray-400">DESCRIPCIÓN</label><textarea className="w-full bg-black border border-gray-600 p-2 text-white h-24 focus:border-party-500 outline-none" value={editingEvent.description || ''} onChange={e => setEditingEvent({ ...editingEvent, description: e.target.value })} /></div>
@@ -132,6 +141,14 @@ export const AdminEvents: React.FC = () => {
                         </div>
                     </div>
                 </div>
+            )}
+
+            {/* Ticket List Modal */}
+            {viewingEvent && (
+                <TicketListModal
+                    event={viewingEvent}
+                    onClose={() => { setViewingEvent(null); updateState({}); /* Trigger refresh logic if needed, actually calling refreshState from useStore would be better */ }}
+                />
             )}
         </div>
     );

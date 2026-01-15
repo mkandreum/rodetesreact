@@ -246,7 +246,7 @@ export const AdminMerch: React.FC = () => {
                                 </div>
                                 <div className="flex-1">
                                     <FileUpload
-                                        onUpload={(url) => setNewItem({ ...newItem, imageUrl: url })}
+                                        onUpload={(url) => setNewItem({ ...newItem, imageUrl: url as string })}
                                         label="Subir Imagen"
                                     />
                                 </div>
