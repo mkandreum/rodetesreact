@@ -22,6 +22,10 @@ services:
     environment:
       - NODE_ENV=production
       - PORT=3000
+      - DB_HOST=db
+      - DB_USER=${DB_USER:-rodetes}
+      - DB_PASSWORD=${DB_PASSWORD:-partysecure}
+      - DB_NAME=${DB_NAME:-rodetesdb}
       - DATABASE_URL=postgresql://${DB_USER:-rodetes}:${DB_PASSWORD:-partysecure}@db:5432/${DB_NAME:-rodetesdb}
       - JWT_SECRET=${JWT_SECRET:-change-this-in-production}
       - SESSION_SECRET=${SESSION_SECRET:-change-this-in-production}
