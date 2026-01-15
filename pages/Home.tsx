@@ -100,6 +100,7 @@ export const Home: React.FC<HomeProps> = ({ onSelectEvent, onNavigate }) => {
                             </div>
                         </div>
                     )}
+                    <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black to-transparent pointer-events-none"></div>
                 </div>
             </div>
         </div>
