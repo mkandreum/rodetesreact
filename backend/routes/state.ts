@@ -103,21 +103,15 @@ router.post('/', async (req: Request, res: Response) => {
                 `, [
                     event.id, event.name, event.date, event.description, event.price,
                     event.posterImageUrl, event.ticketCapacity, event.ticketsSold,
-                    JSON.stringify(event.galleryImages), event.isArchived
+                    event.galleryImages, event.isArchived
                 ]);
             }
-            // What about deletions? 
-            // If ID triggers conflict, we update. 
-            // If user deleted event in UI, it won't be in `events` array.
-            // But we didn't delete it from DB.
-            // We should delete IDs that are NOT in the incoming array.
+
+            // Delete events not present in the payload (Sync)
             if (events.length > 0) {
                 const ids = events.map((e: any) => e.id);
+                // Safe delete: only delete if ID is not in the list
                 await client.query('DELETE FROM events WHERE id NOT IN (' + ids.join(',') + ')');
-            } else {
-                // Danger: Deleting all events?
-                // await client.query('DELETE FROM events');
-                // Let's skip full delete for safety unless empty array explicitly sent intent.
             }
         }
 
@@ -136,7 +130,7 @@ router.post('/', async (req: Request, res: Response) => {
                         gallery_images = EXCLUDED.gallery_images
                 `, [
                     drag.id, drag.name, drag.instagramHandle, drag.description,
-                    drag.cardColor, drag.coverImageUrl, JSON.stringify(drag.galleryImages)
+                    drag.cardColor, drag.coverImageUrl, drag.galleryImages
                 ]);
             }
             if (drags.length > 0) {

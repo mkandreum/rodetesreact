@@ -7,7 +7,12 @@ COPY package*.json ./
 RUN npm install --legacy-peer-deps
 COPY . .
 # Set API URL to empty string so it uses relative path (/api)
+# Set API URL to empty string so it uses relative path (/api)
 ENV VITE_API_URL=""
+ARG VITE_ADMIN_USER
+ARG VITE_ADMIN_PASS
+ENV VITE_ADMIN_USER=$VITE_ADMIN_USER
+ENV VITE_ADMIN_PASS=$VITE_ADMIN_PASS
 RUN npm run build
 
 # ==========================================

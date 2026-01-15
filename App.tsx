@@ -298,14 +298,14 @@ export const App: React.FC = () => {
       {/* Secondary Navigation Bar (Visible on ALL screens) */}
       <div id="secondary-nav-container" className={`fixed ${state.promoEnabled && nextEvent ? 'top-[120px]' : 'top-20'} w-full transition-all`}>
         <div className="container mx-auto">
-          <nav className="flex flex-wrap justify-center md:justify-center gap-2">
+          <nav className="flex justify-around items-center gap-4 py-2">
             {navItems.map((item) => (
               <button
                 key={item.id}
                 onClick={() => navigate(item.id)}
-                className={`flex-none px-6 py-3 font-pixel text-lg uppercase transition-all border-b-4 ${currentPage === item.id
-                  ? 'text-white border-white bg-white/10 text-glow-white'
-                  : 'text-gray-400 border-transparent hover:text-white hover:border-gray-600'}`}
+                className={`font-pixel uppercase text-lg transition-colors ${currentPage === item.id
+                  ? 'text-white text-glow-white'
+                  : 'text-gray-500 hover:text-white'}`}
               >
                 {item.label}
               </button>

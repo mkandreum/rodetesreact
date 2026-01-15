@@ -27,6 +27,7 @@ async function fetchApi<T>(endpoint: string, options: RequestInit = {}): Promise
     const safeEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
     const res = await fetch(`${API_URL}/api${safeEndpoint}`, {
         ...options,
+        credentials: 'include', // Ensure cookies are sent
         headers: {
             ...headers,
             ...options.headers,

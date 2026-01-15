@@ -11,6 +11,9 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        - VITE_ADMIN_USER=${VITE_ADMIN_USER:-admin}
+        - VITE_ADMIN_PASS=${VITE_ADMIN_PASS:-rodetes}
     restart: always
     expose:
       - "80"
