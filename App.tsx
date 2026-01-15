@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useStore } from './services/store';
 import { api } from './services/api';
 import { PageId, Event, Drag, MerchItem } from './types';
@@ -70,8 +70,11 @@ export const App: React.FC = () => {
     if (currentPage !== 'home' && adminTapCount < 4) navigate('home');
   };
 
-  // Calculate next event (needed by useEffect below)
-  const nextEvent = state.events.filter(e => !e.isArchived && new Date(e.date) > new Date()).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())[0];
+  // Calculate next event (memoized to prevent infinite renders)
+  const nextEvent = useMemo(() => {
+    return state.events.filter(e => !e.isArchived && new Date(e.date) > new Date())
+      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())[0];
+  }, [state.events]);
 
   // Show minimal loading only if not loaded yet
   if (!isLoaded) {
