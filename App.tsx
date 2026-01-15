@@ -118,7 +118,7 @@ export const App: React.FC = () => {
       elements.forEach(el => observer.unobserve(el));
       observer.disconnect();
     };
-  }, [currentPage, state.events]);
+  }, [currentPage]); // Removed state.events to prevent infinite loop
 
   // Modal handlers
   const handleSelectEvent = (event: Event) => {
