@@ -38,32 +38,20 @@ const pool = new Pool(poolConfig);
 // Initialize Database Function
 export async function initDb() {
     try {
-        console.log('[DB] Checking database schema...');
+        console.log('[DB] Verifying database schema...');
         const client = await pool.connect();
         try {
-            // Check if 'events' table exists
-            const res = await client.query(`
-                SELECT EXISTS (
-                    SELECT FROM information_schema.tables 
-                    WHERE table_schema = 'public' 
-                    AND table_name = 'events'
-                );
-            `);
-
-            const tableExists = res.rows[0].exists;
-            if (!tableExists) {
-                console.log('[DB] Schema missing. Initializing database...');
-                await client.query(SCHEMA_SQL);
-                console.log('[DB] ✓ Database initialized successfully');
-            } else {
-                console.log('[DB] ✓ Schema already exists');
-            }
+            // Always run schema to ensure all tables exist (Idempotent: uses IF NOT EXISTS)
+            await client.query(SCHEMA_SQL);
+            console.log('[DB] ✓ Database schema verified');
         } finally {
             client.release();
         }
     } catch (err) {
         console.error('[DB] Initialization failed:', err);
         // Do not exit process, let retry logic handle it or fail gracefully later
+        // Throwing here allows server.ts to decide whether to crash
+        throw err;
     }
 }
 
