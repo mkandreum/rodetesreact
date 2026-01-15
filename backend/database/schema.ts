@@ -1,4 +1,4 @@
-export const SCHEMA_SQL = \`
+export const SCHEMA_SQL = `
 -- ============================================
 -- Rodetes Party Database Schema
 -- PostgreSQL 15+
@@ -174,4 +174,4 @@ INSERT INTO app_settings (id) VALUES (1) ON CONFLICT DO NOTHING;
 -- ============================================
 -- GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO rodetes;
 -- GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO rodetes;
-\`;
+`;

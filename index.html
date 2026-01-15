@@ -1,84 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Rodetes Party</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Montserrat:wght@800;900&family=VT323&display=swap" rel="stylesheet">
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            colors: {
-              party: {
-                50: '#fdf2f8',
-                100: '#fce7f3',
-                200: '#fbcfe8',
-                300: '#f9a8d4',
-                400: '#f472b6',
-                500: '#ec4899',
-                600: '#db2777',
-                700: '#be185d',
-                800: '#9d174d',
-                900: '#831843',
-              },
-              neon: {
-                pink: '#F02D7D',
-                blue: '#00f3ff',
-                green: '#0aff00'
-              }
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rodetes Party</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Montserrat:wght@800;900&family=VT323&display=swap"
+    rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            party: {
+              50: '#fdf2f8',
+              100: '#fce7f3',
+              200: '#fbcfe8',
+              300: '#f9a8d4',
+              400: '#f472b6',
+              500: '#ec4899',
+              600: '#db2777',
+              700: '#be185d',
+              800: '#9d174d',
+              900: '#831843',
             },
-            fontFamily: {
-              sans: ['Inter', 'sans-serif'],
-              display: ['Montserrat', 'sans-serif'],
-              pixel: ['VT323', 'monospace'],
-            },
-            animation: {
-              'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-              'bounce-small': 'bounce 2s infinite',
+            neon: {
+              pink: '#F02D7D',
+              blue: '#00f3ff',
+              green: '#0aff00'
             }
           },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Montserrat', 'sans-serif'],
+            pixel: ['VT323', 'monospace'],
+          },
+          animation: {
+            'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            'bounce-small': 'bounce 2s infinite',
+          }
         },
-      }
-    </script>
-    <style>
-      body {
-        font-family: 'Inter', sans-serif;
-        background-color: #0f172a;
-        color: #fff;
-        overflow-x: hidden;
-      }
-      .font-pixel {
-        font-family: 'VT323', monospace;
-      }
-      .text-glow-white {
-        text-shadow: 0 0 10px rgba(255,255,255,0.7);
-      }
-      .neon-btn {
-        background-color: transparent;
-        border: 2px solid white;
-        color: white;
-        transition: all 0.2s;
-      }
-      .neon-btn:hover {
-        background-color: white;
-        color: black;
-        box-shadow: 0 0 15px white;
-      }
-      /* Custom Scrollbar */
-      ::-webkit-scrollbar {
-        width: 8px;
-      }
-      ::-webkit-scrollbar-track {
-        background: #1e293b;
-      }
-      ::-webkit-scrollbar-thumb {
-        background: #F02D7D;
-      }
-    </style>
+      },
+    }
+  </script>
+  <style>
+    /* Styles moved to index.css */
+  </style>
   <script type="importmap">
 {
   "imports": {
@@ -95,8 +66,10 @@
 }
 </script>
 </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/index.tsx"></script>
-  </body>
+
+<body>
+  <div id="root"></div>
+  <script type="module" src="/index.tsx"></script>
+</body>
+
 </html>

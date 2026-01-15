@@ -34,58 +34,58 @@ const RsvpModal: React.FC<RsvpModalProps> = ({ isOpen, onClose }) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div 
-        className="absolute inset-0 bg-black/80 backdrop-blur-sm" 
+      <div
+        className="absolute inset-0 bg-black/80 backdrop-blur-sm"
         onClick={onClose}
       ></div>
-      <div className="relative bg-gray-900 border border-party-500/30 w-full max-w-md rounded-2xl shadow-2xl overflow-hidden transform transition-all">
-        
+      <div className="relative bg-black border-2 border-white w-full max-w-md shadow-[0_0_20px_rgba(255,255,255,0.2)] transform transition-all p-6">
+
         {/* Header */}
-        <div className="bg-gradient-to-r from-party-900 to-purple-900 p-6 flex justify-between items-center">
-          <h2 className="text-2xl font-bold text-white">Join the Party!</h2>
-          <button onClick={onClose} className="text-white/70 hover:text-white transition-colors">
-            <X className="w-6 h-6" />
+        <div className="flex justify-between items-center mb-6 border-b border-gray-800 pb-4">
+          <h2 className="text-3xl font-bold font-pixel text-white text-glow-white">JOIN THE PARTY</h2>
+          <button onClick={onClose} className="text-white hover:text-party-500 transition-colors">
+            <X className="w-8 h-8" />
           </button>
         </div>
 
         {/* Content */}
-        <div className="p-6 md:p-8">
+        <div>
           {submitted ? (
-            <div className="text-center py-10">
+            <div className="text-center py-8">
               <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
-              <h3 className="text-2xl font-bold text-white mb-2">You're on the list!</h3>
-              <p className="text-gray-400">Get ready to rock the Rodetes.</p>
+              <h3 className="text-3xl font-pixel text-white mb-2">YOU'RE ON THE LIST!</h3>
+              <p className="text-gray-400 font-pixel text-xl">GET READY TO ROCK.</p>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-1">Full Name</label>
+                <label className="block text-xl font-pixel text-gray-300 mb-1">FULL NAME</label>
                 <input
                   required
                   type="text"
-                  className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2.5 text-white focus:ring-2 focus:ring-party-500 focus:border-transparent outline-none transition-all"
+                  className="w-full bg-[#111] border border-gray-700 p-2 text-white font-pixel text-lg focus:border-party-500 outline-none transition-all"
                   value={formData.name}
-                  onChange={(e) => setFormData({...formData, name: e.target.value})}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-1">Email</label>
+                <label className="block text-xl font-pixel text-gray-300 mb-1">EMAIL</label>
                 <input
                   required
                   type="email"
-                  className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2.5 text-white focus:ring-2 focus:ring-party-500 focus:border-transparent outline-none transition-all"
+                  className="w-full bg-[#111] border border-gray-700 p-2 text-white font-pixel text-lg focus:border-party-500 outline-none transition-all"
                   value={formData.email}
-                  onChange={(e) => setFormData({...formData, email: e.target.value})}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-1">Number of Guests</label>
+                <label className="block text-xl font-pixel text-gray-300 mb-1">GUESTS</label>
                 <select
-                  className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2.5 text-white focus:ring-2 focus:ring-party-500 focus:border-transparent outline-none transition-all"
+                  className="w-full bg-[#111] border border-gray-700 p-2 text-white font-pixel text-lg focus:border-party-500 outline-none transition-all"
                   value={formData.guestsCount}
-                  onChange={(e) => setFormData({...formData, guestsCount: Number(e.target.value)})}
+                  onChange={(e) => setFormData({ ...formData, guestsCount: Number(e.target.value) })}
                 >
                   {[1, 2, 3, 4, 5].map(n => (
                     <option key={n} value={n}>{n}</option>
@@ -94,20 +94,20 @@ const RsvpModal: React.FC<RsvpModalProps> = ({ isOpen, onClose }) => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-1">Dietary Restrictions</label>
+                <label className="block text-xl font-pixel text-gray-300 mb-1">DIETARY RESTRICTIONS</label>
                 <textarea
-                  className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2.5 text-white focus:ring-2 focus:ring-party-500 focus:border-transparent outline-none transition-all h-24 resize-none"
+                  className="w-full bg-[#111] border border-gray-700 p-2 text-white font-pixel text-lg focus:border-party-500 outline-none transition-all h-24 resize-none"
                   value={formData.dietaryRestrictions}
-                  onChange={(e) => setFormData({...formData, dietaryRestrictions: e.target.value})}
-                  placeholder="Optional..."
+                  onChange={(e) => setFormData({ ...formData, dietaryRestrictions: e.target.value })}
+                  placeholder="OPTIONAL..."
                 />
               </div>
 
               <button
                 type="submit"
-                className="w-full bg-party-600 hover:bg-party-500 text-white font-bold py-3 rounded-lg shadow-lg hover:shadow-party-500/50 transition-all transform hover:-translate-y-1 mt-4"
+                className="w-full neon-btn font-pixel text-2xl py-3 mt-6"
               >
-                Confirm RSVP
+                CONFIRM RSVP
               </button>
             </form>
           )}

@@ -56,7 +56,7 @@ export const ImageModal: React.FC<ImageModalProps> = ({
                 <img
                     src={imageUrl}
                     alt="Full screen"
-                    className="max-h-[90vh] max-w-full object-contain rounded-lg shadow-2xl"
+                    className="max-h-[90vh] max-w-full object-contain shadow-[0_0_30px_rgba(0,0,0,0.5)] border border-gray-800"
                     onClick={(e) => e.stopPropagation()}
                 />
 

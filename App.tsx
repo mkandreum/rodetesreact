@@ -244,11 +244,8 @@ const App: React.FC = () => {
 
       {/* Promo Banner */}
       {state.promoEnabled && nextEvent && (
-        <div
-          className="fixed top-0 left-0 right-0 z-50 bg-black border-b-2 overflow-hidden h-10 flex items-center"
-          style={{ borderColor: state.promoNeonColor, boxShadow: `0 0 10px ${state.promoNeonColor}` }}
-        >
-          <div className="whitespace-nowrap animate-[marquee_15s_linear_infinite] font-pixel text-xl" style={{ textShadow: `0 0 10px ${state.promoNeonColor}` }}>
+        <div id="next-event-promo-container" className="fixed top-0 left-0 right-0 z-50 h-10 flex items-center border-b-2" style={{ borderColor: state.promoNeonColor, boxShadow: `0 0 10px ${state.promoNeonColor}` }}>
+          <div id="next-event-promo" style={{ textShadow: `0 0 10px ${state.promoNeonColor}`, color: state.promoNeonColor }}>
             {state.promoCustomText
               .replace('{eventName}', nextEvent.name)
               .replace('{eventShortDate}', new Date(nextEvent.date).toLocaleDateString())}
@@ -257,10 +254,10 @@ const App: React.FC = () => {
       )}
 
       {/* Header */}
-      <header className={`fixed ${state.promoEnabled && nextEvent ? 'top-10' : 'top-0'} w-full z-40 bg-black border-b border-white transition-all`}>
+      <header className={`fixed ${state.promoEnabled && nextEvent ? 'top-10' : 'top-0'} w-full transition-all border-b border-white`}>
         <div className="container mx-auto px-4 h-16 flex justify-between items-center">
           <button onClick={handleLogoTap} className="flex-shrink-0 group select-none">
-            <span className="font-pixel text-3xl text-white tracking-tighter group-hover:text-party-500 transition-colors" style={{ textShadow: '0 0 10px rgba(255,255,255,0.8)' }}>RODETES</span>
+            <span className="font-pixel text-3xl text-white tracking-tighter glitch-hover" data-text="RODETES" style={{ textShadow: '0 0 10px rgba(255,255,255,0.8)' }}>RODETES</span>
           </button>
 
           {/* Hamburger (Visible on ALL screens now, as requested) */}
@@ -271,7 +268,7 @@ const App: React.FC = () => {
       </header>
 
       {/* Secondary Navigation Bar (Visible on ALL screens) */}
-      <div className={`fixed ${state.promoEnabled && nextEvent ? 'top-26' : 'top-16'} w-full z-30 bg-black border-b border-white transition-all`}>
+      <div id="secondary-nav-container" className={`fixed ${state.promoEnabled && nextEvent ? 'top-20' : 'top-16'} w-full transition-all`}>
         <div className="container mx-auto">
           <nav className="flex overflow-x-auto whitespace-nowrap scrollbar-hide justify-center md:justify-center">
             {navItems.map((item) => (
@@ -435,7 +432,7 @@ const App: React.FC = () => {
                     {new Date(event.date) > new Date() ? (
                       <button
                         onClick={() => { setSelectedEvent(event); setActiveModal('ticket'); setGeneratedTicketId(null); setTicketForm({ name: '', surname: '', email: '', quantity: 1 }); }}
-                        className="w-full neon-btn font-pixel text-xl py-3 hover:bg-party-600 hover:border-party-600 hover:text-white"
+                        className="w-full neon-btn font-pixel text-xl py-3"
                         disabled={event.ticketsSold >= event.ticketCapacity && event.ticketCapacity > 0}
                       >
                         {event.ticketsSold >= event.ticketCapacity && event.ticketCapacity > 0 ? 'SOLD OUT' : 'COMPRAR ENTRADA'}
@@ -627,7 +624,7 @@ const App: React.FC = () => {
                   <label className="block font-pixel text-lg mb-1 text-party-300">CONTRASEÑA</label>
                   <input type="password" value={adminPassInput} onChange={e => setAdminPassInput(e.target.value)} className="w-full bg-black border border-gray-700 p-3 text-white focus:border-party-500 outline-none" placeholder="••••••" />
                 </div>
-                <button type="submit" className="w-full neon-btn font-pixel text-2xl py-3 hover:bg-party-600 hover:border-party-600">ENTRAR AL SISTEMA</button>
+                <button type="submit" className="w-full neon-btn font-pixel text-2xl py-3">ENTRAR AL SISTEMA</button>
               </form>
             ) : (
               <div className="space-y-8 animate-fade-in">

@@ -15,7 +15,7 @@ const Scanner: React.FC<Props> = ({ onScan, onClose }) => {
       try {
         const scanner = new Html5Qrcode("reader");
         scannerRef.current = scanner;
-        
+
         await scanner.start(
           { facingMode: "environment" },
           { fps: 10, qrbox: { width: 250, height: 250 } },
@@ -49,9 +49,9 @@ const Scanner: React.FC<Props> = ({ onScan, onClose }) => {
         <h3 className="text-2xl font-pixel text-white text-center mb-4">ESCANEAR CÓDIGO</h3>
         <div id="reader" className="w-full bg-black aspect-square overflow-hidden border border-gray-700"></div>
         {error && <p className="text-red-400 text-center font-pixel mt-2">{error}</p>}
-        <button 
+        <button
           onClick={onClose}
-          className="w-full mt-4 bg-gray-700 text-white font-pixel text-xl py-2 px-4 hover:bg-gray-600 transition-colors"
+          className="w-full mt-4 neon-btn font-pixel text-xl py-2 px-4"
         >
           CERRAR CÁMARA
         </button>
