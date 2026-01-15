@@ -13,7 +13,6 @@ body {
     background-color: var(--bg-dark);
     color: #e5e7eb;
     scroll-behavior: smooth;
-    padding-top: 128px;
     overflow-x: hidden;
     /* Prevent horizontal scroll from effects */
     position: relative;
@@ -22,8 +21,7 @@ body {
 
 /* Dynamic padding for promo banner - applied via React */
 body.promo-active {
-    padding-top: 168px;
-    /* 128px base + 40px banner height */
+    /* Managed by React Layout component */
 }
 
 /* --- 1. FONDO "ALIVE" CRT SCANLINESS --- */

@@ -120,7 +120,7 @@ export const Layout: React.FC<LayoutProps> = ({
             )}
 
             {/* Main Content */}
-            <main className="container mx-auto px-4 sm:px-6 lg:px-8 pb-20">
+            <main className={`container mx-auto px-4 sm:px-6 lg:px-8 pb-20 ${promoEnabled && nextEvent ? 'pt-48' : 'pt-40'}`}>
                 {children}
             </main>
 
