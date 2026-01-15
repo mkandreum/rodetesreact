@@ -340,7 +340,7 @@ const App: React.FC = () => {
                           className="w-full neon-btn font-pixel text-xl py-2 flex items-center justify-center gap-2"
                           disabled={event.ticketsSold >= event.ticketCapacity && event.ticketCapacity > 0}
                         >
-                          <TicketIcon size={20} />
+                          <Ticket size={20} />
                           {event.ticketsSold >= event.ticketCapacity && event.ticketCapacity > 0 ? 'AGOTADO' : 'CONSEGUIR ENTRADA'}
                         </button>
                       </div>
