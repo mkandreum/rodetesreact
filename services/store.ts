@@ -1,55 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { AppState, Event, Drag, Ticket, MerchSale, MerchItem } from '../types';
-
-const STORAGE_KEY = 'rodetes_app_state_v1';
+import { api } from './api';
 
 const INITIAL_STATE: AppState = {
-  events: [
-    {
-      id: 1,
-      name: 'GRAN FIESTA INAUGURAL',
-      date: '2024-12-31T23:00',
-      price: 15.00,
-      ticketCapacity: 200,
-      ticketsSold: 0,
-      description: 'La primera gran fiesta de Rodetes. ¡No te lo pierdas!',
-      posterImageUrl: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=1000&auto=format&fit=crop',
-      galleryImages: [
-        'https://images.unsplash.com/photo-1545128485-c400e7702796?q=80&w=500&auto=format&fit=crop',
-        'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=500&auto=format&fit=crop',
-        'https://images.unsplash.com/photo-1514525253440-b393452e3720?q=80&w=500&auto=format&fit=crop'
-      ],
-      isArchived: false
-    }
-  ],
-  drags: [
-    {
-      id: 1,
-      name: 'PAKA LA PIRAÑA',
-      description: 'La reina de los mares y de la pista de baile.',
-      instagramHandle: 'pakalapiranya',
-      cardColor: '#F02D7D',
-      coverImageUrl: 'https://images.unsplash.com/photo-1595152452543-e5fc28ebc2b8?q=80&w=600&auto=format&fit=crop',
-      galleryImages: [],
-      merchItems: [
-        { id: 101, name: 'Camiseta Oficial', price: 25.00, imageUrl: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=400&auto=format&fit=crop' }
-      ]
-    },
-    {
-      id: 2,
-      name: 'VENEZIA',
-      description: 'Elegancia, drama y mucho lip sync.',
-      instagramHandle: 'venezia_drag',
-      cardColor: '#00f3ff',
-      coverImageUrl: 'https://images.unsplash.com/photo-1605289967096-72b1563600dd?q=80&w=600&auto=format&fit=crop',
-      galleryImages: [],
-      merchItems: []
-    }
-  ],
-  webMerch: [
-    { id: 201, name: 'Tote Bag Rodetes', price: 12.00, imageUrl: 'https://images.unsplash.com/photo-1597484661643-2f6f33267575?q=80&w=400&auto=format&fit=crop' },
-    { id: 202, name: 'Abanico Loco', price: 10.00, imageUrl: 'https://images.unsplash.com/photo-1622646399039-335ee91807d9?q=80&w=400&auto=format&fit=crop' }
-  ],
+  events: [],
+  drags: [],
+  webMerch: [],
+  dragMerch: [],
   tickets: [],
   merchSales: [],
   allowedDomains: [],
@@ -58,111 +15,147 @@ const INITIAL_STATE: AppState = {
   ticketLogoUrl: '',
   bannerVideoUrl: '',
   promoEnabled: true,
-  promoCustomText: 'PRÓXIMO EVENTO: {eventName} - {eventShortDate} ⚡ ENTRADAS YA A LA VENTA',
-  promoNeonColor: '#F02D7D'
+  promoCustomText: '',
+  promoNeonColor: '#F02D7D',
+  settings: {},
+  nextEventId: 1,
+  nextDragId: 1
 };
 
 export const useStore = () => {
   const [state, setState] = useState<AppState>(INITIAL_STATE);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
+  // Load initial data from API
   useEffect(() => {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    if (stored) {
+    const loadData = async () => {
       try {
-        const parsed = JSON.parse(stored);
-        setState({ ...INITIAL_STATE, ...parsed });
-      } catch (e) {
-        console.error("Failed to load state", e);
+        const data = await api.loadState();
+        // Merge with initial state to ensure all fields exist
+        setState(prev => ({ ...prev, ...data }));
+        setIsLoaded(true);
+      } catch (err) {
+        console.error("Failed to load state from API:", err);
+        setError("Error de conexión con el servidor");
+        setIsLoaded(true); // Don't block app even if error
       }
-    }
-    setIsLoaded(true);
+    };
+    loadData();
   }, []);
 
-  useEffect(() => {
-    if (isLoaded) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-    }
-  }, [state, isLoaded]);
+  // --- Actions (Now wrapping API calls) ---
 
-  // --- Actions ---
+  const refreshState = useCallback(async () => {
+    try {
+      const data = await api.loadState();
+      setState(prev => ({ ...prev, ...data }));
+    } catch (e) { console.error(e); }
+  }, []);
+
+  // Events CRUD (Mocked for now locally + reload, OR implementing full CRUD later in API)
+  // For Phase 1 migration, simple state update + maybe future API sync
+  // Real implementation would be: await api.addEvent(event) -> then refresh or optimistic
+  // Helper for persistence
+  const saveToServer = async (newState: AppState) => {
+    try {
+      await api.saveState(newState);
+    } catch (e) {
+      console.error("Failed to save state:", e);
+    }
+  };
 
   // Events CRUD
-  const addEvent = (event: Event) => {
-    setState(prev => ({ ...prev, events: [...prev.events, event] }));
+  const addEvent = async (event: Event) => {
+    const newState = { ...state, events: [...state.events, event] };
+    setState(newState);
+    await saveToServer(newState);
   };
 
-  const updateEvent = (updatedEvent: Event) => {
-    setState(prev => ({
-      ...prev,
-      events: prev.events.map(e => e.id === updatedEvent.id ? updatedEvent : e)
-    }));
+  const updateEvent = async (updatedEvent: Event) => {
+    const newState = {
+      ...state,
+      events: state.events.map(e => e.id === updatedEvent.id ? updatedEvent : e)
+    };
+    setState(newState);
+    await saveToServer(newState);
   };
 
-  const deleteEvent = (id: number) => {
-    setState(prev => ({
-      ...prev,
-      events: prev.events.filter(e => e.id !== id)
-    }));
+  const deleteEvent = async (id: number) => {
+    const newState = {
+      ...state,
+      events: state.events.filter(e => e.id !== id)
+    };
+    setState(newState);
+    await saveToServer(newState);
   };
 
   // Drags CRUD
-  const addDrag = (drag: Drag) => {
-    setState(prev => ({ ...prev, drags: [...prev.drags, drag] }));
+  const addDrag = async (drag: Drag) => {
+    const newState = { ...state, drags: [...state.drags, drag] };
+    setState(newState);
+    await saveToServer(newState);
   };
 
-  const updateDrag = (updatedDrag: Drag) => {
-    setState(prev => ({
-      ...prev,
-      drags: prev.drags.map(d => d.id === updatedDrag.id ? updatedDrag : d)
-    }));
+  const updateDrag = async (updatedDrag: Drag) => {
+    const newState = {
+      ...state,
+      drags: state.drags.map(d => d.id === updatedDrag.id ? updatedDrag : d)
+    };
+    setState(newState);
+    await saveToServer(newState);
   };
 
-  const deleteDrag = (id: number) => {
-    setState(prev => ({
-      ...prev,
-      drags: prev.drags.filter(d => d.id !== id)
-    }));
+  const deleteDrag = async (id: number) => {
+    const newState = {
+      ...state,
+      drags: state.drags.filter(d => d.id !== id)
+    };
+    setState(newState);
+    await saveToServer(newState);
   };
 
   // Tickets
-  const addTicket = (ticket: Ticket) => {
+  const addTicket = async (ticket: Ticket) => {
     setState(prev => {
-      const newTickets = [...prev.tickets, ticket];
-      const newEvents = prev.events.map(e => 
-        e.id === ticket.eventId 
-          ? { ...e, ticketsSold: e.ticketsSold + ticket.quantity }
-          : e
-      );
-      return { ...prev, tickets: newTickets, events: newEvents };
+      const newTickets = [...prev.tickets || [], ticket];
+      return { ...prev, tickets: newTickets };
     });
+    // Tickets are saved via api.buyTicket in real flow, but for manual add:
+    await refreshState();
   };
 
-  const removeTicket = (ticketId: string) => {
-    setState(prev => {
-      const ticket = prev.tickets.find(t => t.ticketId === ticketId);
-      if (!ticket) return prev;
-      
-      const newTickets = prev.tickets.filter(t => t.ticketId !== ticketId);
-      const newEvents = prev.events.map(e =>
-        e.id === ticket.eventId
-          ? { ...e, ticketsSold: Math.max(0, e.ticketsSold - ticket.quantity) }
-          : e
-      );
-      return { ...prev, tickets: newTickets, events: newEvents };
-    });
+  const removeTicket = async (ticketId: string) => {
+    await refreshState();
   };
 
   // Merch
-  const addMerchSale = (sale: MerchSale) => {
-    setState(prev => ({ ...prev, merchSales: [...prev.merchSales, sale] }));
+  const addMerchSale = async (sale: MerchSale) => {
+    setState(prev => ({ ...prev, merchSales: [...(prev.merchSales || []), sale] }));
+    await refreshState();
   };
 
-  const updateMerchSaleStatus = (saleId: string, status: 'Pending' | 'Delivered') => {
+  const updateMerchSaleStatus = async (saleId: string, status: 'Pending' | 'Delivered') => {
     setState(prev => ({
       ...prev,
-      merchSales: prev.merchSales.map(s => s.saleId === saleId ? { ...s, status } : s)
+      merchSales: (prev.merchSales || []).map(s => s.saleId === saleId ? { ...s, status } : s)
     }));
+    try {
+      // Find the ID. Our API uses ID. 
+      // Ideally we should use database ID, but here we assume saleId is sufficient or trigger full reload.
+      // If saleId is string and DB expects int, this might fail unless backend handles string lookup.
+      // The robust way:
+      const sale = state.merchSales.find(s => s.saleId === saleId);
+      if (sale && sale.id) {
+        await api.updateSaleStatus(String(sale.id), status);
+      } else {
+        // If we don't have ID, refresh
+        await refreshState();
+      }
+    } catch (e) {
+      console.error(e);
+      await refreshState();
+    }
   };
 
   const confirmTicketUsage = (ticketId: string, quantityUsed: number = 1) => {
@@ -173,15 +166,23 @@ export const useStore = () => {
         [ticketId]: (prev.scannedTickets[ticketId] || 0) + quantityUsed
       }
     }));
+    api.scanTicket(ticketId).catch(console.error);
   };
 
-  const updateState = (updates: Partial<AppState>) => {
-    setState(prev => ({ ...prev, ...updates }));
+  const updateState = async (updates: Partial<AppState>) => {
+    const newState = { ...state, ...updates };
+    setState(newState);
+    // If settings are updated, save them
+    if (Object.keys(updates).some(k => ['settings', 'appLogoUrl', 'bannerVideoUrl', 'promoEnabled'].includes(k))) {
+      await saveToServer(newState);
+    }
   };
 
   return {
     state,
     isLoaded,
+    error,
+    refreshState,
     addEvent,
     updateEvent,
     deleteEvent,

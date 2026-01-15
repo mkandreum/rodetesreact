@@ -1,20 +1,57 @@
 version: '3.8'
 
 services:
-  # Frontend Application (React/Vite served via Nginx)
-  web:
-    build: .
+  # ============================================
+  # Frontend - React SPA served by Nginx
+  # ============================================
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
     restart: always
-    ports:
-      - "3000:80"
-    environment:
-      - VITE_API_URL=http://localhost:3000
+    expose:
+      - "80"
+    # Uncomment for local development:
+    # ports:
+    #   - "3000:80"
     depends_on:
-      - db
+      - backend
+    environment:
+      - VITE_API_URL=http://backend:3001
     networks:
       - rodetes-net
 
-  # Database Service (PostgreSQL) - Persistent Storage
+  # ============================================
+  # Backend - Node.js/Express API Server
+  # ============================================
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    restart: always
+    expose:
+      - "3001"
+    # Uncomment for local development:
+    # ports:
+    #   - "3001:3001"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+      - DATABASE_URL=postgresql://${DB_USER:-rodetes}:${DB_PASSWORD:-partysecure}@db:5432/${DB_NAME:-rodetesdb}
+      - JWT_SECRET=${JWT_SECRET:-change-this-in-production}
+      - SESSION_SECRET=${SESSION_SECRET:-change-this-in-production}
+      - CORS_ORIGIN=${CORS_ORIGIN:-*}
+    volumes:
+      - uploads:/app/uploads
+    networks:
+      - rodetes-net
+
+  # ============================================
+  # Database - PostgreSQL
+  # ============================================
   db:
     image: postgres:15-alpine
     restart: always
@@ -24,18 +61,27 @@ services:
       POSTGRES_DB: ${DB_NAME:-rodetesdb}
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./backend/database/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - rodetes-net
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U rodetes"]
+      test: [ "CMD-SHELL", "pg_isready -U ${DB_USER:-rodetes}" ]
       interval: 10s
       timeout: 5s
       retries: 5
 
+# ============================================
+# Persistent Volumes
+# ============================================
 volumes:
+  uploads:
+    driver: local
   postgres_data:
     driver: local
 
+# ============================================
+# Internal Network
+# ============================================
 networks:
   rodetes-net:
     driver: bridge

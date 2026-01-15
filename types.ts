@@ -21,7 +21,7 @@ export interface Drag {
   cardColor: string;
   coverImageUrl: string;
   galleryImages: string[];
-  merchItems: MerchItem[];
+  merchItems?: MerchItem[]; // Optional as it might be populated via filtering dragMerch
 }
 
 export interface MerchItem {
@@ -29,22 +29,26 @@ export interface MerchItem {
   name: string;
   price: number;
   imageUrl: string;
+  dragId?: number | null; // Added to distinguish web vs drag merch
 }
 
 export interface Ticket {
+  id?: number; // Database ID
   ticketId: string;
   eventId: number;
   nombre: string;
   apellidos: string;
   email: string;
   quantity: number;
+  scannedCount?: number;
 }
 
 export interface MerchSale {
+  id?: number;
   saleId: string;
-  dragId: number | 'web';
-  dragName: string;
-  itemId: number;
+  merchItemId: number;
+  dragId?: number | null;
+  dragName?: string;
   itemName: string;
   itemPrice: number;
   quantity: number;
@@ -55,25 +59,41 @@ export interface MerchSale {
   status: 'Pending' | 'Delivered';
 }
 
-export interface Guest {
-  name: string;
-  email: string;
-  guestsCount: number;
-  dietaryRestrictions: string;
+export interface AppSettings {
+  appLogoUrl?: string;
+  ticketLogoUrl?: string;
+  bannerVideoUrl?: string;
+  promoEnabled: boolean;
+  promoCustomText: string;
+  promoNeonColor: string;
+  allowedDomains: string[];
 }
 
 export interface AppState {
   events: Event[];
   drags: Drag[];
   webMerch: MerchItem[];
-  tickets: Ticket[];
+  dragMerch: MerchItem[];
+  tickets: Ticket[]; // This might be empty for non-admins?
   merchSales: MerchSale[];
+
+  // Settings flattened for easier state access or kept in settings object? 
+  // Store.ts assumes flattened in older version, but let's try to group them given the backend returns `settings`.
+  // However, `store.ts` destructures them. 
+  // Let's keep them here for compatibility but mapped from settings
   allowedDomains: string[];
   scannedTickets: Record<string, number>;
+
   appLogoUrl: string;
   ticketLogoUrl: string;
   bannerVideoUrl: string;
   promoEnabled: boolean;
   promoCustomText: string;
   promoNeonColor: string;
+
+  // New backend structure wrapper
+  settings: Partial<AppSettings>;
+
+  nextEventId: number;
+  nextDragId: number;
 }
