@@ -27,7 +27,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ isAdminLoggedIn, onLogin, 
             {!isAdminLoggedIn ? (
                 <ModernLogin onLogin={handleLoginSubmit} />
             ) : (
-                <div className="space-y-2 animate-fade-in">
+                <div className="space-y-2 page-fade-in">
                     {/* Header / Session Info */}
                     <div className="bg-gray-800 p-2 border border-gray-600 flex justify-between items-center rounded text-xs">
                         <span className="font-mono text-gray-300">Sesión: <strong className="text-white">admin</strong></span>

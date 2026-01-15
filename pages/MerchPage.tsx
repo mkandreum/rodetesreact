@@ -44,7 +44,7 @@ export const MerchPage: React.FC<MerchPageProps> = ({ onSelectMerch }) => {
     );
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-6 page-fade-in">
             <h2 className="text-5xl font-pixel text-white text-left mb-8 text-glow-white">MERCHANDISING</h2>
 
             {/* RODETES OFICIAL */}

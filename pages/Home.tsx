@@ -16,7 +16,7 @@ export const Home: React.FC<HomeProps> = ({ onSelectEvent, onNavigate }) => {
     const recentPastEvent = pastEvents[0];
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-6 page-fade-in">
             {/* Eventos Próximos/Pasados en Inicio */}
             <section>
                 <h2 className="text-5xl font-pixel text-white text-left mb-4 text-glow-white glitch-hover" data-text="EVENTOS">EVENTOS</h2>

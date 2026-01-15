@@ -10,7 +10,7 @@ export const GalleryPage: React.FC<GalleryPageProps> = ({ onSelectImage }) => {
     const { state } = useStore();
 
     return (
-        <div className="space-y-12">
+        <div className="space-y-12 page-fade-in">
             <h2 className="text-5xl font-pixel text-white text-left mb-8 text-glow-white">GALERÍAS</h2>
             {state.events.filter(e => e.galleryImages.length > 0).map(event => (
                 <div key={event.id} className="border-t border-gray-800 pt-8 animate-fade-in">

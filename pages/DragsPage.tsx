@@ -11,7 +11,7 @@ export const DragsPage: React.FC<DragsPageProps> = ({ onSelectMerch }) => {
     const { state } = useStore();
 
     return (
-        <div className="space-y-12">
+        <div className="space-y-12 page-fade-in">
             <h2 className="text-5xl font-pixel text-white text-left text-glow-white">NUESTRAS DRAGS</h2>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
                 {state.drags.map(drag => (

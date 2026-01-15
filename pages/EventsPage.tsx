@@ -10,7 +10,7 @@ export const EventsPage: React.FC<EventsPageProps> = ({ onSelectEvent }) => {
     const { state } = useStore();
 
     return (
-        <div className="space-y-4">
+        <div className="space-y-4 page-fade-in">
             <h2 className="text-5xl font-pixel text-white text-left mb-8 text-glow-white">EVENTOS</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {state.events.filter(e => !e.isArchived).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()).map(event => (
