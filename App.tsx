@@ -13,7 +13,7 @@ import Scanner from './components/Scanner';
 import Countdown from './components/Countdown';
 import RsvpModal from './components/RsvpModal';
 
-const App: React.FC = () => {
+export const App: React.FC = () => {
   const {
     state, isLoaded,
     addTicket, removeTicket,
@@ -79,6 +79,32 @@ const App: React.FC = () => {
     handleSecretTap();
     if (currentPage !== 'home' && adminTapCount < 4) navigate('home');
   };
+
+  // --- Scroll Reveal Logic (Legacy Parity) ---
+  useEffect(() => {
+    const observerOptions = {
+      root: null,
+      rootMargin: '0px',
+      threshold: 0.1
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          // observer.unobserve(entry.target); // Optional: keep watching or unobserve
+        }
+      });
+    }, observerOptions);
+
+    const elements = document.querySelectorAll('.reveal-on-scroll');
+    elements.forEach(el => observer.observe(el));
+
+    return () => {
+      elements.forEach(el => observer.unobserve(el));
+      observer.disconnect();
+    };
+  }, [currentPage, state.events]); // Re-run on page/data change
 
   // --- Nav Items ---
   const navItems: { id: PageId, label: string }[] = [
@@ -255,20 +281,20 @@ const App: React.FC = () => {
 
       {/* Header */}
       <header className={`fixed ${state.promoEnabled && nextEvent ? 'top-10' : 'top-0'} w-full transition-all border-b border-white`}>
-        <div className="container mx-auto px-4 h-16 flex justify-between items-center">
+        <div className="container mx-auto px-4 h-20 flex justify-between items-center">
           <button onClick={handleLogoTap} className="flex-shrink-0 group select-none">
-            <span className="font-pixel text-3xl text-white tracking-tighter glitch-hover" data-text="RODETES" style={{ textShadow: '0 0 10px rgba(255,255,255,0.8)' }}>RODETES</span>
+            <img src="/logo.png" alt="RODETES" className="h-16 w-auto object-contain glitch-hover" />
           </button>
 
           {/* Hamburger (Visible on ALL screens now, as requested) */}
           <button onClick={() => { setIsMobileMenuOpen(!isMobileMenuOpen); handleSecretTap(); }} className="p-2 text-white hover:text-party-500 transition-colors">
-            {isMobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
+            {isMobileMenuOpen ? <X size={32} /> : <Menu size={32} />}
           </button>
         </div>
       </header>
 
       {/* Secondary Navigation Bar (Visible on ALL screens) */}
-      <div id="secondary-nav-container" className={`fixed ${state.promoEnabled && nextEvent ? 'top-20' : 'top-16'} w-full transition-all`}>
+      <div id="secondary-nav-container" className={`fixed ${state.promoEnabled && nextEvent ? 'top-[120px]' : 'top-20'} w-full transition-all`}>
         <div className="container mx-auto">
           <nav className="flex overflow-x-auto whitespace-nowrap scrollbar-hide justify-center md:justify-center">
             {navItems.map((item) => (
@@ -287,25 +313,31 @@ const App: React.FC = () => {
       </div>
 
       {/* Mobile Menu Overlay (Keep for Admin access & redundancy) */}
+      {/* Mobile Menu Overlay (Legacy Dropdown Style) */}
       {isMobileMenuOpen && (
-        <div className="fixed inset-0 z-50 bg-black/95 pt-32 px-6 flex flex-col gap-6 animate-fade-in">
-          <div className="flex justify-end">
-            <button onClick={() => setIsMobileMenuOpen(false)} className="text-white p-2 mb-4"><X size={32} /></button>
+        <div id="mobile-menu" className={`absolute ${state.promoEnabled && nextEvent ? 'top-[120px]' : 'top-20'} right-4 z-50 bg-black border-2 border-white w-64 shadow-lg shadow-white/30 rounded-none animate-fade-in`}>
+          <div className="px-2 pt-2 pb-3 space-y-1">
+            {navItems.map((item) => (
+              <button
+                key={item.id}
+                onClick={() => navigate(item.id)}
+                className={`block w-full text-left px-3 py-2 font-pixel text-lg rounded-md transition-colors ${currentPage === item.id
+                  ? 'bg-gray-700 text-white'
+                  : 'text-gray-300 hover:bg-gray-700 hover:text-white'
+                  }`}
+              >
+                {item.label}
+              </button>
+            ))}
+            {isAdminLoggedIn && (
+              <button
+                onClick={() => navigate('admin')}
+                className="block w-full text-left px-3 py-2 font-pixel text-lg text-gray-300 hover:bg-gray-700 hover:text-white rounded-md border-t border-gray-700 mt-2 pt-2"
+              >
+                ADMIN
+              </button>
+            )}
           </div>
-          {navItems.map((item) => (
-            <button
-              key={item.id}
-              onClick={() => navigate(item.id)}
-              className={`font-pixel text-3xl uppercase text-left border-l-4 pl-4 ${currentPage === item.id ? 'text-white border-party-500' : 'text-gray-500 border-gray-800'}`}
-            >
-              {item.label}
-            </button>
-          ))}
-          {isAdminLoggedIn && (
-            <button onClick={() => navigate('admin')} className="font-pixel text-3xl uppercase text-left text-party-400 border-l-4 border-party-400 pl-4 mt-4 animate-pulse">
-              ADMIN PANEL
-            </button>
-          )}
         </div>
       )}
 
@@ -314,63 +346,56 @@ const App: React.FC = () => {
 
         {/* === HOME PAGE === */}
         {currentPage === 'home' && (
-          <div className="space-y-16">
-            <div className="relative aspect-video w-full bg-black border border-white overflow-hidden group shadow-[0_0_20px_rgba(236,72,153,0.3)]">
-              {state.bannerVideoUrl ? (
-                state.bannerVideoUrl.endsWith('.mp4') || state.bannerVideoUrl.endsWith('.webm') ?
-                  <video src={state.bannerVideoUrl} autoPlay loop muted className="w-full h-full object-cover" /> :
-                  <img src={state.bannerVideoUrl} alt="Banner" className="w-full h-full object-cover" />
-              ) : (
-                <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-party-900 via-black to-purple-900">
-                  <h1 className="text-6xl md:text-9xl font-pixel text-white text-glow-white text-center mb-8 tracking-tighter animate-pulse-slow">RODETES<br /><span className="text-party-500">PARTY</span></h1>
-                  <div className="transform scale-75 md:scale-100">
-                    <Countdown />
-                  </div>
-                </div>
-              )}
-            </div>
-
+          <div className="space-y-12">
+            {/* Eventos Próximos/Pasados en Inicio */}
             <section>
-              <h2 className="text-4xl font-pixel text-white text-center mb-8 text-glow-white">
-                {upcomingEvents.length > 0 ? 'PRÓXIMOS EVENTOS' : 'ÚLTIMO EVENTO'}
-              </h2>
+              <h2 className="text-4xl font-pixel text-white text-center mb-6 text-glow-white glitch-hover" data-text="EVENTOS">EVENTOS</h2>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-center">
+              <div id="home-event-list-container" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
                 {upcomingEvents.length > 0 ? (
                   upcomingEvents.map(event => (
-                    <div key={event.id} className="bg-gray-900 border border-white hover:border-party-500 transition-all hover:shadow-[0_0_15px_rgba(236,72,153,0.5)] group">
-                      <div className="aspect-video bg-black overflow-hidden relative">
-                        <img src={event.posterImageUrl} alt={event.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                        <div className="absolute top-2 right-2 bg-black/80 px-3 py-1 font-pixel border border-white">
-                          {new Date(event.date).toLocaleDateString()}
-                        </div>
+                    <div key={event.id} className="relative bg-gray-900 rounded-none border-white overflow-hidden flex flex-col transform transition-all hover:border-gray-300 hover:shadow-white/30 duration-300 reveal-on-scroll visible border">
+                      <div className="absolute top-0 left-0 text-white font-pixel text-sm px-2 py-1 rounded-none border-b border-r border-black z-10 shadow-md" style={{ backgroundColor: '#F02D7D' }}>
+                        PRÓXIMO EVENTO
                       </div>
-                      <div className="p-6">
-                        <h3 className="text-2xl font-pixel text-white mb-2">{event.name}</h3>
-                        <p className="text-gray-400 font-pixel mb-4 flex items-center gap-2"><MapPin size={16} /> SECRET LOCATION</p>
+                      <div className="w-full bg-black border-b border-white overflow-hidden cursor-pointer" onClick={() => { setSelectedEvent(event); setActiveModal('ticket'); setGeneratedTicketId(null); setTicketForm({ name: '', surname: '', email: '', quantity: 1 }); }}>
+                        <img src={event.posterImageUrl} alt={event.name} className="w-full object-cover" />
+                      </div>
+                      <div className="p-6 flex flex-col flex-grow">
+                        <h3 className="text-3xl font-pixel text-white text-glow-white mb-2 cursor-pointer glitch-hover" onClick={() => { setSelectedEvent(event); setActiveModal('ticket'); setGeneratedTicketId(null); setTicketForm({ name: '', surname: '', email: '', quantity: 1 }); }}>
+                          {event.name}
+                        </h3>
+                        <p className="text-gray-400 font-semibold font-pixel text-lg mb-3">{new Date(event.date).toLocaleDateString()}, 21:00</p>
+                        <p className="text-4xl font-extrabold text-white mb-4">{event.price} €</p>
+                        <p className="text-gray-400 mb-6 flex-grow whitespace-pre-wrap font-sans">
+                          {event.description}
+                        </p>
                         <button
                           onClick={() => { setSelectedEvent(event); setActiveModal('ticket'); setGeneratedTicketId(null); setTicketForm({ name: '', surname: '', email: '', quantity: 1 }); }}
-                          className="w-full neon-btn font-pixel text-xl py-2 flex items-center justify-center gap-2"
+                          className="w-full neon-btn font-pixel text-2xl py-3 px-4 rounded-none"
                           disabled={event.ticketsSold >= event.ticketCapacity && event.ticketCapacity > 0}
                         >
-                          <Ticket size={20} />
                           {event.ticketsSold >= event.ticketCapacity && event.ticketCapacity > 0 ? 'AGOTADO' : 'CONSEGUIR ENTRADA'}
                         </button>
                       </div>
                     </div>
                   ))
                 ) : recentPastEvent ? (
-                  <div className="bg-gray-900 border border-white md:col-start-2 shadow-[0_0_20px_rgba(255,255,255,0.1)]">
-                    <div className="aspect-video bg-black overflow-hidden relative">
-                      <img src={recentPastEvent.posterImageUrl} alt={recentPastEvent.name} className="w-full h-full object-cover grayscale opacity-80 hover:grayscale-0 hover:opacity-100 transition-all duration-700" />
-                      <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-                        <span className="text-3xl font-pixel text-white border-4 border-white px-6 py-2 transform -rotate-6">FINALIZADO</span>
-                      </div>
+                  <div className="relative bg-gray-900 rounded-none border-white overflow-hidden flex flex-col transform transition-all hover:border-gray-300 hover:shadow-white/30 duration-300 reveal-on-scroll border">
+                    <div className="absolute top-0 left-0 bg-red-700 text-white font-pixel text-sm px-2 py-1 rounded-none border-b border-r border-black z-10 shadow-md">FINALIZADO</div>
+                    <div className="w-full bg-black border-b border-white overflow-hidden">
+                      <img src={recentPastEvent.posterImageUrl} alt={recentPastEvent.name} className="w-full opacity-60" />
                     </div>
-                    <div className="p-6 text-center">
-                      <h3 className="text-3xl font-pixel text-white mb-2">{recentPastEvent.name}</h3>
-                      <p className="text-gray-400 font-pixel mb-4">{new Date(recentPastEvent.date).toLocaleDateString()}</p>
-                      <button onClick={() => navigate('gallery')} className="text-party-400 hover:text-white font-pixel underline">VER FOTOS DEL EVENTO</button>
+                    <div className="p-6 flex flex-col flex-grow">
+                      <h3 className="text-3xl font-pixel text-gray-500 mb-2 glitch-hover">
+                        {recentPastEvent.name}
+                      </h3>
+                      <p className="text-gray-400 font-semibold font-pixel text-lg mb-3">{new Date(recentPastEvent.date).toLocaleDateString()}</p>
+                      <p className="text-4xl font-extrabold text-gray-600 mb-4">{recentPastEvent.price} €</p>
+                      <p className="text-gray-400 mb-6 flex-grow whitespace-pre-wrap font-sans">
+                        {recentPastEvent.description}
+                      </p>
+                      <button disabled className="w-full bg-gray-800 text-gray-500 font-pixel text-2xl py-3 px-4 rounded-none border border-gray-700 cursor-not-allowed">EVENTO FINALIZADO</button>
                     </div>
                   </div>
                 ) : (
@@ -379,31 +404,34 @@ const App: React.FC = () => {
               </div>
             </section>
 
-            {/* Past Galleries Preview */}
-            {state.events.some(e => e.galleryImages.length > 0) && (
-              <section className="pt-12 border-t border-gray-800">
-                <h2 className="text-3xl font-pixel text-white text-center mb-8 flex items-center justify-center gap-3">
-                  <ImageIcon /> GALERÍAS RECIENTES
-                </h2>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  {state.events
-                    .filter(e => e.galleryImages.length > 0)
-                    .slice(0, 4)
-                    .map(event => (
-                      <div key={event.id} onClick={() => navigate('gallery')} className="aspect-square bg-gray-900 border border-gray-700 overflow-hidden cursor-pointer group relative">
-                        <img src={event.galleryImages[0]} alt={event.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
-                        <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center p-2 text-center">
-                          <p className="font-pixel text-white text-sm">{event.name}</p>
-                          <p className="text-xs text-gray-300">{event.galleryImages.length} fotos</p>
-                        </div>
-                      </div>
-                    ))}
-                </div>
-                <div className="text-center mt-6">
-                  <button onClick={() => navigate('gallery')} className="bg-gray-800 hover:bg-gray-700 text-white px-6 py-2 rounded font-pixel text-sm transition-colors">VER TODAS LAS FOTOS</button>
-                </div>
-              </section>
-            )}
+            {/* Botón Ver Todos los Eventos */}
+            <div id="view-all-events-container" className="text-center mb-12">
+              <button
+                id="view-all-events-btn"
+                onClick={() => navigate('events')}
+                className="neon-btn font-pixel text-2xl py-3 px-8 rounded-none"
+              >
+                VER TODOS LOS EVENTOS
+              </button>
+            </div>
+
+            {/* Banner Principal (Imagen/Video) */}
+            <div className="bg-black border border-white overflow-hidden mb-12 reveal-on-scroll">
+              <div id="home-banner-container" className="relative w-full bg-black aspect-video">
+                {state.bannerVideoUrl ? (
+                  state.bannerVideoUrl.endsWith('.mp4') || state.bannerVideoUrl.endsWith('.webm') ?
+                    <video src={state.bannerVideoUrl} autoPlay loop muted className="w-full h-full object-cover" /> :
+                    <img src={state.bannerVideoUrl} alt="Banner" className="w-full h-full object-cover" />
+                ) : (
+                  <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-party-900 via-black to-purple-900">
+                    <h1 className="text-6xl md:text-9xl font-pixel text-white text-glow-white text-center mb-8 tracking-tighter animate-pulse-slow">RODETES<br /><span className="text-party-500">PARTY</span></h1>
+                    <div className="transform scale-75 md:scale-100">
+                      <Countdown />
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
         )}
 
@@ -857,4 +885,3 @@ const App: React.FC = () => {
   );
 }
 
-export default App;

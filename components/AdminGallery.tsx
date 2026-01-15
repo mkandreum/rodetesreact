@@ -83,25 +83,25 @@ export const AdminGallery: React.FC = () => {
                         </div>
                     </div>
 
-                    {/* Grid */}
-                    <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 mt-6">
+                    {/* Grid (Legacy Style) */}
+                    <div className="admin-gallery-grid mt-6">
                         {selectedEvent.galleryImages?.map((img, idx) => (
-                            <div key={idx} className="group relative aspect-square bg-gray-800 rounded-lg overflow-hidden border border-gray-700 hover:border-neon-cyan transition-all">
+                            <div key={idx} className="admin-gallery-item group">
                                 <img
                                     src={img}
                                     alt={`Gallery ${idx}`}
-                                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 cursor-pointer"
                                     onClick={() => setLightboxImage(img)}
+                                    // Image styling is handled by .admin-gallery-item img in index.css, mostly
+                                    className="cursor-pointer hover:opacity-80 transition-opacity"
                                 />
 
-                                <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-                                    <button
-                                        onClick={() => handleDeleteImage(idx)}
-                                        className="p-2 bg-red-500/80 hover:bg-red-500 text-white rounded-full transition-colors transform translate-y-4 group-hover:translate-y-0 duration-300"
-                                    >
-                                        <Trash2 className="w-5 h-5" />
-                                    </button>
-                                </div>
+                                <button
+                                    onClick={() => handleDeleteImage(idx)}
+                                    className="delete-img-btn"
+                                    title="Eliminar imagen"
+                                >
+                                    X
+                                </button>
                             </div>
                         ))}
 
