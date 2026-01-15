@@ -464,7 +464,7 @@ const App: React.FC = () => {
                 {state.drags.filter(d => d.galleryImages.length > 0).map(drag => (
                   <div key={drag.id} className="mb-16 animate-fade-in">
                     <h3 className="text-3xl font-pixel text-white mb-6 pl-4 border-l-4 flex items-center gap-3" style={{ borderColor: drag.cardColor }}>
-                      <span className="w-4 h-4 rounded-full" style={{ backgroundColor: drag.cardColor }}></span>
+                      <Ticket className="w-4 h-4 mr-2" />
                       {drag.name}
                     </h3>
                     <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
