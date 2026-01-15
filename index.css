@@ -17,6 +17,15 @@ body {
     /* Prevent horizontal scroll from effects */
     position: relative;
     min-height: 100vh;
+    padding-top: 0;
+    /* Will be handled by React Layout component */
+    transition: padding-top 0.3s ease-in-out;
+}
+
+/* Dynamic padding for promo banner - applied via React */
+body.promo-active {
+    padding-top: 0;
+    /* Managed by React */
 }
 
 /* --- 1. FONDO "ALIVE" CRT SCANLINESS --- */

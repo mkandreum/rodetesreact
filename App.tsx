@@ -165,7 +165,6 @@ export const App: React.FC = () => {
       nextEvent={nextEvent}
       isAdminLoggedIn={isAdminLoggedIn}
       isMobileMenuOpen={isMobileMenuOpen}
-      appLogoUrl={state.appLogoUrl}
       onLogoTap={handleLogoTap}
       onToggleMenu={() => { setIsMobileMenuOpen(!isMobileMenuOpen); handleSecretTap(); }}
       onNavigate={navigate}

@@ -36,9 +36,7 @@ export const FileUpload: React.FC<FileUploadProps> = ({
 
         try {
             const response = await api.uploadFile(file);
-            // Add cache-busting timestamp to force browser refresh
-            const urlWithCacheBust = `${response.url}?t=${Date.now()}`;
-            onUpload(urlWithCacheBust);
+            onUpload(response.url);
             // Reset input
             if (fileInputRef.current) fileInputRef.current.value = '';
         } catch (err) {

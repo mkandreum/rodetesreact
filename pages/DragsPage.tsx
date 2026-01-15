@@ -41,7 +41,7 @@ export const DragsPage: React.FC<DragsPageProps> = ({ onSelectMerch }) => {
                                                         <img src={item.imageUrl} alt={item.name} className="w-full h-full object-cover" />
                                                     </div>
                                                     <p className="text-xs font-pixel truncate text-gray-300 group-hover:text-white">{item.name}</p>
-                                                    <p className="text-xs font-bold text-party-400">{Number(item.price).toFixed(2)} €</p>
+                                                    <p className="text-xs font-bold text-party-400">{item.price} €</p>
                                                 </div>
                                             ))}
                                         </div>

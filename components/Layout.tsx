@@ -11,7 +11,6 @@ interface LayoutProps {
     nextEvent?: { name: string; date: string } | null;
     isAdminLoggedIn: boolean;
     isMobileMenuOpen: boolean;
-    appLogoUrl: string;
     onLogoTap: () => void;
     onToggleMenu: () => void;
     onNavigate: (page: PageId) => void;
@@ -26,7 +25,6 @@ export const Layout: React.FC<LayoutProps> = ({
     nextEvent,
     isAdminLoggedIn,
     isMobileMenuOpen,
-    appLogoUrl,
     onLogoTap,
     onToggleMenu,
     onNavigate
@@ -43,7 +41,7 @@ export const Layout: React.FC<LayoutProps> = ({
         <div className="min-h-screen bg-black text-white font-sans selection:bg-party-500 selection:text-white">
             {/* Promo Banner */}
             {promoEnabled && nextEvent && (
-                <div id="next-event-promo-container" className="fixed top-0 left-0 right-0 z-50 h-10 flex items-center border-b-2 bg-black" style={{ borderColor: promoNeonColor, boxShadow: `0 0 10px ${promoNeonColor}` }}>
+                <div id="next-event-promo-container" className="fixed top-0 left-0 right-0 z-50 h-10 flex items-center border-b-2" style={{ borderColor: promoNeonColor, boxShadow: `0 0 10px ${promoNeonColor}` }}>
                     <div id="next-event-promo" style={{ textShadow: `0 0 10px ${promoNeonColor}`, color: promoNeonColor }}>
                         {promoCustomText
                             .replace('{eventName}', nextEvent.name)
@@ -56,16 +54,11 @@ export const Layout: React.FC<LayoutProps> = ({
             <header className={`fixed ${promoEnabled && nextEvent ? 'top-10' : 'top-0'} w-full transition-all bg-black border-b-2 border-white z-40`}>
                 <div className="container mx-auto px-4 h-20 flex justify-between items-center">
                     <button onClick={onLogoTap} className="flex-shrink-0 group select-none">
-                        <img
-                            src={appLogoUrl || '/logo.png'}
-                            alt="RODETES"
-                            className="h-16 w-auto object-contain glitch-hover"
-                            key={appLogoUrl}
-                        />
+                        <img src="/logo.png" alt="RODETES" className="h-16 w-auto object-contain glitch-hover" />
                     </button>
 
                     <button onClick={onToggleMenu} className="p-2 text-white hover:text-party-500 transition-colors">
-                        {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+                        {isMobileMenuOpen ? <X size={32} /> : <Menu size={32} />}
                     </button>
                 </div>
             </header>
