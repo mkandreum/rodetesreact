@@ -54,8 +54,9 @@ services:
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U ${DB_USER:-rodetes} -d ${DB_NAME:-rodetesdb}" ]
       interval: 10s
-      timeout: 5s
+      timeout: 10s
       retries: 5
+      start_period: 30s
 
 # ============================================
 # Persistent Volumes

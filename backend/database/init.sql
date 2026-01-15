@@ -169,7 +169,5 @@ ON CONFLICT (username) DO UPDATE SET password_hash = '$2a$10$TTkvMM6/81xuPMCL074
 INSERT INTO app_settings (id) VALUES (1) ON CONFLICT DO NOTHING;
 
 -- ============================================
--- GRANT permissions (adjust as needed)
+-- End of initialization
 -- ============================================
-GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO rodetes;
-GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO rodetes;
