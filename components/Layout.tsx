@@ -65,14 +65,14 @@ export const Layout: React.FC<LayoutProps> = ({
 
             {/* Secondary Navigation Bar */}
             {currentPage !== 'admin' && (
-                <div id="secondary-nav-container" className={`fixed ${promoEnabled && nextEvent ? 'top-[120px]' : 'top-20'} w-full transition-all z-30`}>
-                    <div className="container mx-auto">
-                        <nav className="flex justify-around items-center gap-4 py-2 px-4">
+                <div id="secondary-nav-container" className={`fixed ${promoEnabled && nextEvent ? 'top-[120px]' : 'top-20'} w-full transition-all z-30 bg-black/95 backdrop-blur-sm border-b border-gray-800`}>
+                    <div className="container mx-auto px-4">
+                        <nav className="flex justify-end items-center gap-8 py-3">
                             {navItems.map((item) => (
                                 <button
                                     key={item.id}
                                     onClick={() => onNavigate(item.id)}
-                                    className={`font-pixel uppercase text-lg transition-colors ${currentPage === item.id
+                                    className={`font-pixel uppercase text-base transition-colors ${currentPage === item.id
                                         ? 'text-white text-glow-white'
                                         : 'text-gray-500 hover:text-white'}`}
                                 >
