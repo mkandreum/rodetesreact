@@ -29,16 +29,52 @@ if (connectionString) {
     poolConfig.port = 5432;
 }
 
+import { SCHEMA_SQL } from './schema';
+
+// ... (previous code)
+
 const pool = new Pool(poolConfig);
+
+// Initialize Database Function
+export async function initDb() {
+    try {
+        console.log('[DB] Checking database schema...');
+        const client = await pool.connect();
+        try {
+            // Check if 'events' table exists
+            const res = await client.query(`
+                SELECT EXISTS (
+                    SELECT FROM information_schema.tables 
+                    WHERE table_schema = 'public' 
+                    AND table_name = 'events'
+                );
+            `);
+
+            const tableExists = res.rows[0].exists;
+            if (!tableExists) {
+                console.log('[DB] Schema missing. Initializing database...');
+                await client.query(SCHEMA_SQL);
+                console.log('[DB] ✓ Database initialized successfully');
+            } else {
+                console.log('[DB] ✓ Schema already exists');
+            }
+        } finally {
+            client.release();
+        }
+    } catch (err) {
+        console.error('[DB] Initialization failed:', err);
+        // Do not exit process, let retry logic handle it or fail gracefully later
+    }
+}
 
 // Test connection on startup
 pool.on('connect', () => {
-    console.log('✓ Database connected successfully');
+    // console.log('✓ Database connected successfully');
 });
 
 pool.on('error', (err: Error) => {
     console.error('Unexpected database error:', err);
-    process.exit(-1);
+    // don't exit, might be transient
 });
 
 export default pool;
