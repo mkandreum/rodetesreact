@@ -4,6 +4,7 @@ import { AdminDrags } from '../components/AdminDrags';
 import { AdminMerch } from '../components/AdminMerch';
 import { AdminGallery } from '../components/AdminGallery';
 import { AdminSettings } from '../components/AdminSettings';
+import { ModernLogin } from '../components/ModernLogin';
 
 interface AdminPageProps {
     isAdminLoggedIn: boolean;
@@ -14,76 +15,63 @@ interface AdminPageProps {
 
 export const AdminPage: React.FC<AdminPageProps> = ({ isAdminLoggedIn, onLogin, onLogout, onOpenScanner }) => {
     const [adminSection, setAdminSection] = useState<'settings' | 'events' | 'drags' | 'merch' | 'gallery'>('events');
-    const [adminEmailInput, setAdminEmailInput] = useState('');
-    const [adminPassInput, setAdminPassInput] = useState('');
 
-    const handleLoginSubmit = (e: React.FormEvent) => {
-        onLogin(e, adminEmailInput, adminPassInput);
+    const handleLoginSubmit = async (username: string, password: string) => {
+        // Create a fake FormEvent to match the expected signature
+        const fakeEvent = { preventDefault: () => { } } as React.FormEvent;
+        await onLogin(fakeEvent, username, password);
     };
 
     return (
         <div className="max-w-7xl mx-auto">
-            <h2 className="text-4xl font-pixel text-white text-center mb-10 text-glow-white">PANEL DE ADMINISTRACIÓN</h2>
+            <h2 className="text-2xl font-pixel text-white text-center mb-4 text-glow-white">ADMIN</h2>
 
             {!isAdminLoggedIn ? (
-                <form
-                    onSubmit={handleLoginSubmit}
-                    className="bg-gray-900 p-8 border border-white max-w-md mx-auto shadow-2xl"
-                >
-                    <div className="mb-4">
-                        <label className="block font-pixel text-lg mb-1 text-party-300">USUARIO</label>
-                        <input type="text" value={adminEmailInput} onChange={e => setAdminEmailInput(e.target.value)} className="w-full bg-black border border-gray-700 p-3 text-white focus:border-party-500 outline-none" placeholder="admin" />
-                    </div>
-                    <div className="mb-6">
-                        <label className="block font-pixel text-lg mb-1 text-party-300">CONTRASEÑA</label>
-                        <input type="password" value={adminPassInput} onChange={e => setAdminPassInput(e.target.value)} className="w-full bg-black border border-gray-700 p-3 text-white focus:border-party-500 outline-none" placeholder="••••••" />
-                    </div>
-                    <button type="submit" className="w-full neon-btn font-pixel text-2xl py-3">ENTRAR AL SISTEMA</button>
-                </form>
+                <ModernLogin onLogin={handleLoginSubmit} />
             ) : (
-                <div className="space-y-8 animate-fade-in">
+                <div className="space-y-4 animate-fade-in">
                     {/* Header / Session Info */}
-                    <div className="bg-gray-800 p-4 border border-gray-600 flex justify-between items-center rounded-lg shadow-lg">
-                        <span className="font-mono text-sm text-gray-300">SESIÓN: <strong className="text-white">{adminEmailInput || 'admin'}</strong></span>
-                        <div className="flex gap-3">
-                            <button onClick={onOpenScanner} className="bg-indigo-600 text-white font-pixel px-4 py-2 hover:bg-indigo-500 rounded flex items-center gap-2">SCANNER</button>
-                            <button onClick={onLogout} className="bg-red-600 text-white font-pixel px-4 py-2 hover:bg-red-500 rounded">SALIR</button>
+                    <div className="bg-gray-800 p-2 border border-gray-600 flex justify-between items-center rounded">
+                        <span className="font-mono text-xs text-gray-300">Sesión: <strong className="text-white">admin</strong></span>
+                        <div className="flex gap-2">
+                            <button onClick={onOpenScanner} className="bg-indigo-600 text-white font-pixel px-3 py-1 text-sm hover:bg-indigo-500 rounded">SCAN</button>
+                            <button onClick={onLogout} className="bg-red-600 text-white font-pixel px-3 py-1 text-sm hover:bg-red-500 rounded">SALIR</button>
                         </div>
                     </div>
 
                     {/* Navigation Tabs */}
-                    <div className="flex flex-wrap gap-4 justify-center border-b border-gray-800 pb-6">
+                    <div className="flex flex-wrap gap-2 border-b border-gray-800 pb-3">
                         <button
                             onClick={() => setAdminSection('events')}
-                            className={`px-6 py-2 rounded-full font-display uppercase tracking-wider transition-all ${adminSection === 'events' ? 'bg-neon-pink text-white shadow-lg shadow-neon-pink/50' : 'bg-gray-900 text-gray-400 hover:text-white'
+                            className={`px-4 py-1 text-sm rounded-full font-pixel uppercase transition-all ${adminSection === 'events' ? 'bg-neon-pink text-white' : 'bg-gray-900 text-gray-400 hover:text-white'
                                 }`}
                         >
                             Eventos
                         </button>
                         <button
                             onClick={() => setAdminSection('drags')}
-                            className={`px-6 py-2 rounded-full font-display uppercase tracking-wider transition-all ${adminSection === 'drags' ? 'bg-neon-cyan text-black shadow-lg shadow-neon-cyan/50' : 'bg-gray-900 text-gray-400 hover:text-white'
+                            className={`px-4 py-1 text-sm rounded-full font-pixel uppercase transition-all ${adminSection === 'drags' ? 'bg-neon-cyan text-black' : 'bg-gray-900 text-gray-400 hover:text-white'
                                 }`}
                         >
                             Drags
                         </button>
                         <button
                             onClick={() => setAdminSection('merch')}
-                            className={`px-6 py-2 rounded-full font-display uppercase tracking-wider transition-all ${adminSection === 'merch' ? 'bg-purple-500 text-white shadow-lg shadow-purple-500/50' : 'bg-gray-900 text-gray-400 hover:text-white'
+                            className={`px-4 py-1 text-sm rounded-full font-pixel uppercase transition-all ${adminSection === 'merch' ? 'bg-purple-500 text-white' : 'bg-gray-900 text-gray-400 hover:text-white'
                                 }`}
                         >
-                            Merch & Ventas
+                            Merch
                         </button>
                         <button
                             onClick={() => setAdminSection('gallery')}
-                            className={`px-6 py-2 rounded-full font-display uppercase tracking-wider transition-all ${adminSection === 'gallery' ? 'bg-yellow-500 text-black shadow-lg shadow-yellow-500/50' : 'bg-gray-900 text-gray-400 hover:text-white'
+                            className={`px-4 py-1 text-sm rounded-full font-pixel uppercase transition-all ${adminSection === 'gallery' ? 'bg-yellow-500 text-black' : 'bg-gray-900 text-gray-400 hover:text-white'
                                 }`}
                         >
                             Galería
                         </button>
                         <button
                             onClick={() => setAdminSection('settings')}
-                            className={`px-6 py-2 rounded-full font-display uppercase tracking-wider transition-all ${adminSection === 'settings' ? 'bg-gray-700 text-white shadow-lg' : 'bg-gray-900 text-gray-400 hover:text-white'
+                            className={`px-4 py-1 text-sm rounded-full font-pixel uppercase transition-all ${adminSection === 'settings' ? 'bg-gray-700 text-white' : 'bg-gray-900 text-gray-400 hover:text-white'
                                 }`}
                         >
                             Ajustes
