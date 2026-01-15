@@ -1,10 +1,13 @@
-import express, { Request, Response } from 'express';
+import express, { Request, Response, NextFunction } from 'express';
 import session from 'express-session';
 import connectPgSimple from 'connect-pg-simple';
 import compression from 'compression';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import path from 'path';
+
+// Load environment variables
+dotenv.config();
 
 const PgSession = connectPgSimple(session);
 
@@ -19,11 +22,23 @@ import backupRoutes from './routes/backup';
 // Database
 import pool, { initDb } from './database/db';
 
-// Load environment variables
-dotenv.config();
+// Utils
+import { syncAdminPassword } from './utils/syncAdminPassword';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
+
+// ============================================
+// Pre-initialization
+// ============================================
+
+// Initialize admin password sync
+syncAdminPassword().catch(err => {
+    console.error('Failed to sync admin password:', err);
+    // In a real application, you might want to handle this more gracefully
+    // For now, we'll exit if admin password sync fails as it's critical
+    process.exit(1);
+});
 
 // ============================================
 // Middleware

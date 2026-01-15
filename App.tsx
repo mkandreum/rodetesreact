@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useStore } from './services/store';
+import { api } from './services/api';
 import { PageId, Event, Drag, MerchItem } from './types';
 import Scanner from './components/Scanner';
 import { ImageModal } from './components/ImageModal';
@@ -124,14 +125,18 @@ export const App: React.FC = () => {
     setActiveModal('scanResult');
   };
 
-  const handleAdminLogin = (e: React.FormEvent, email: string, pass: string) => {
+  const handleAdminLogin = async (e: React.FormEvent, email: string, pass: string) => {
     e.preventDefault();
-    const adminUser = (import.meta as any).env.VITE_ADMIN_USER || 'admin';
-    const adminPass = (import.meta as any).env.VITE_ADMIN_PASS || 'rodetes';
-    if (email === adminUser && pass === adminPass) {
+
+    try {
+      // Call backend login to create session
+      await api.login({ username: email, password: pass });
       setIsAdminLoggedIn(true);
-    } else {
-      alert('Credenciales incorrectas (Usuario: admin / Pass: rodetes)');
+      console.log('✅ Admin logged in successfully');
+    } catch (error) {
+      console.error('❌ Login failed:', error);
+      alert('Credenciales incorrectas');
+      setIsAdminLoggedIn(false);
     }
   };
 

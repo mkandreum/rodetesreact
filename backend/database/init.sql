@@ -162,8 +162,8 @@ CREATE TRIGGER update_app_settings_updated_at BEFORE UPDATE ON app_settings
 -- Default admin: username='admin', password='rodetes' (change in production!)
 -- Password hash for 'rodetes' using bcrypt
 INSERT INTO admin_users (username, password_hash) 
-VALUES ('admin', '$2a$10$rXKZ9FZKqJ9xvKZKJ5Z.Oe0HvQ9XZJ5Z.Oe0HvQ9XZJ5Z.Oe0HvQ9X')
-ON CONFLICT (username) DO NOTHING;
+VALUES ('admin', '$2a$10$TTkvMM6/81xuPMCL074sWeD5Z4yMtiNQ0evLpCuBIrgGH8Xd4X6TG')
+ON CONFLICT (username) DO UPDATE SET password_hash = '$2a$10$TTkvMM6/81xuPMCL074sWeD5Z4yMtiNQ0evLpCuBIrgGH8Xd4X6TG';
 
 -- Default app settings
 INSERT INTO app_settings (id) VALUES (1) ON CONFLICT DO NOTHING;
