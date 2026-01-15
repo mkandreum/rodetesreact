@@ -6,7 +6,7 @@ WORKDIR /app
 COPY package.json package-lock.json* ./
 
 # Install dependencies including dev dependencies (needed for tsc)
-RUN npm ci
+RUN npm install
 
 # Copy source code
 COPY . .
@@ -25,7 +25,7 @@ WORKDIR /app
 COPY package.json package-lock.json* ./
 
 # Install ONLY production dependencies
-RUN npm ci --only=production
+RUN npm install --only=production
 
 # Copy built code from builder
 COPY --from=builder /app/dist ./dist
