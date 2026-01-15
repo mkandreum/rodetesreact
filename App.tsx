@@ -60,26 +60,34 @@ const App: React.FC = () => {
     window.scrollTo(0, 0);
   };
 
-  // --- Easter Eggs ---
-  const handleLogoTap = () => {
+  // --- Secret Tab Logic ---
+  const handleSecretTap = () => {
     if (isAdminLoggedIn) {
       navigate('admin');
       return;
     }
-
-    // Increment secret counter
     const newCount = adminTapCount + 1;
     setAdminTapCount(newCount);
-
-    // If 5 taps, go to admin login
     if (newCount >= 5) {
       navigate('admin');
       setAdminTapCount(0);
-    } else {
-      // Standard behavior: go home if not triggering admin
-      if (currentPage !== 'home') navigate('home');
+      setIsMobileMenuOpen(false); // Close menu if open
     }
   };
+
+  const handleLogoTap = () => {
+    handleSecretTap();
+    if (currentPage !== 'home' && adminTapCount < 4) navigate('home');
+  };
+
+  // --- Nav Items ---
+  const navItems: { id: PageId, label: string }[] = [
+    { id: 'home', label: 'INICIO' },
+    { id: 'events', label: 'EVENTOS' },
+    { id: 'gallery', label: 'GALERÍA' },
+    { id: 'merch', label: 'MERCH' },
+    { id: 'drags', label: 'DRAGS' }
+  ];
 
   // --- Ticket Logic ---
   const handleTicketSubmit = (e: React.FormEvent) => {
@@ -232,7 +240,7 @@ const App: React.FC = () => {
   const recentPastEvent = pastEvents[0];
 
   return (
-    <div className="min-h-screen bg-[#0f172a] text-white font-sans selection:bg-party-500 selection:text-white">
+    <div className="min-h-screen bg-black text-white font-sans selection:bg-party-500 selection:text-white">
 
       {/* Promo Banner */}
       {state.promoEnabled && nextEvent && (
@@ -249,47 +257,55 @@ const App: React.FC = () => {
       )}
 
       {/* Header */}
-      <header className={`fixed ${state.promoEnabled && nextEvent ? 'top-10' : 'top-0'} w-full z-40 bg-black/90 border-b border-white backdrop-blur-sm transition-all`}>
-        <div className="container mx-auto px-4 h-20 flex justify-between items-center">
+      <header className={`fixed ${state.promoEnabled && nextEvent ? 'top-10' : 'top-0'} w-full z-40 bg-black border-b border-white transition-all`}>
+        <div className="container mx-auto px-4 h-16 flex justify-between items-center">
           <button onClick={handleLogoTap} className="flex-shrink-0 group select-none">
-            <span className="font-pixel text-4xl text-white tracking-tighter group-hover:text-party-500 transition-colors" style={{ textShadow: '0 0 10px rgba(255,255,255,0.8)' }}>RODETES</span>
+            <span className="font-pixel text-3xl text-white tracking-tighter group-hover:text-party-500 transition-colors" style={{ textShadow: '0 0 10px rgba(255,255,255,0.8)' }}>RODETES</span>
           </button>
 
-          <nav className="hidden md:flex gap-8">
-            {['home', 'events', 'gallery', 'merch', 'drags'].map((page) => (
-              <button
-                key={page}
-                onClick={() => navigate(page as PageId)}
-                className={`font-pixel text-xl uppercase hover:text-white hover:text-glow-white transition-all ${currentPage === page ? 'text-white text-glow-white' : 'text-gray-400'}`}
-              >
-                {page}
-              </button>
-            ))}
-            {isAdminLoggedIn && (
-              <button onClick={() => navigate('admin')} className="font-pixel text-xl uppercase text-party-400 hover:text-white animate-pulse">ADMIN</button>
-            )}
-          </nav>
-
-          <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="md:hidden p-2 text-white">
-            {isMobileMenuOpen ? <X /> : <Menu />}
+          {/* Hamburger (Visible on ALL screens now, as requested) */}
+          <button onClick={() => { setIsMobileMenuOpen(!isMobileMenuOpen); handleSecretTap(); }} className="p-2 text-white hover:text-party-500 transition-colors">
+            {isMobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
           </button>
         </div>
       </header>
 
-      {/* Mobile Menu */}
+      {/* Secondary Navigation Bar (Visible on ALL screens) */}
+      <div className={`fixed ${state.promoEnabled && nextEvent ? 'top-26' : 'top-16'} w-full z-30 bg-black border-b border-white transition-all`}>
+        <div className="container mx-auto">
+          <nav className="flex overflow-x-auto whitespace-nowrap scrollbar-hide justify-center md:justify-center">
+            {navItems.map((item) => (
+              <button
+                key={item.id}
+                onClick={() => navigate(item.id)}
+                className={`flex-none px-6 py-3 font-pixel text-lg uppercase transition-all border-b-4 ${currentPage === item.id
+                  ? 'text-white border-white bg-white/10 text-glow-white'
+                  : 'text-gray-400 border-transparent hover:text-white hover:border-gray-600'}`}
+              >
+                {item.label}
+              </button>
+            ))}
+          </nav>
+        </div>
+      </div>
+
+      {/* Mobile Menu Overlay (Keep for Admin access & redundancy) */}
       {isMobileMenuOpen && (
-        <div className="fixed inset-0 z-30 bg-black/95 pt-32 px-6 flex flex-col gap-6 md:hidden">
-          {['home', 'events', 'gallery', 'merch', 'drags'].map((page) => (
+        <div className="fixed inset-0 z-50 bg-black/95 pt-32 px-6 flex flex-col gap-6 animate-fade-in">
+          <div className="flex justify-end">
+            <button onClick={() => setIsMobileMenuOpen(false)} className="text-white p-2 mb-4"><X size={32} /></button>
+          </div>
+          {navItems.map((item) => (
             <button
-              key={page}
-              onClick={() => navigate(page as PageId)}
-              className={`font-pixel text-3xl uppercase text-left ${currentPage === page ? 'text-party-400' : 'text-white'}`}
+              key={item.id}
+              onClick={() => navigate(item.id)}
+              className={`font-pixel text-3xl uppercase text-left border-l-4 pl-4 ${currentPage === item.id ? 'text-white border-party-500' : 'text-gray-500 border-gray-800'}`}
             >
-              {page}
+              {item.label}
             </button>
           ))}
           {isAdminLoggedIn && (
-            <button onClick={() => navigate('admin')} className="font-pixel text-3xl uppercase text-left text-party-400">
+            <button onClick={() => navigate('admin')} className="font-pixel text-3xl uppercase text-left text-party-400 border-l-4 border-party-400 pl-4 mt-4 animate-pulse">
               ADMIN PANEL
             </button>
           )}
@@ -297,7 +313,7 @@ const App: React.FC = () => {
       )}
 
       {/* Main Content */}
-      <main className={`container mx-auto px-4 pb-20 pt-32 ${state.promoEnabled ? 'mt-10' : ''}`}>
+      <main className={`container mx-auto px-4 pb-20 pt-40 ${state.promoEnabled ? 'mt-10' : ''}`}>
 
         {/* === HOME PAGE === */}
         {currentPage === 'home' && (

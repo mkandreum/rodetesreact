@@ -1,28 +1,19 @@
 import { AppState, Event, Drag, Ticket, MerchSale, MerchItem } from '../types';
 
-const API_URL = (import.meta as any).env.VITE_API_URL || '/api';
+// Default to empty string if not set (for relative paths in same-origin deployment)
+const API_URL = (import.meta as any).env.VITE_API_URL || '';
 
 const headers = {
     'Content-Type': 'application/json',
 };
 
-// Helper to convert snake_case to camelCase
-function toCamelCase(obj: any): any {
-    if (Array.isArray(obj)) {
-        return obj.map(v => toCamelCase(v));
-    } else if (obj !== null && obj.constructor === Object) {
-        return Object.keys(obj).reduce((result, key) => {
-            const camelKey = key.replace(/_([a-z])/g, (g) => g[1].toUpperCase());
-            result[camelKey] = toCamelCase(obj[key]);
-            return result;
-        }, {} as any);
-    }
-    return obj;
-}
+// ... (helper function unchanged)
 
 // Helper for API calls
 async function fetchApi<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
-    const res = await fetch(`${API_URL}/api${endpoint}`, {
+    // Ensure endpoint starts with /
+    const safeEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
+    const res = await fetch(`${API_URL}/api${safeEndpoint}`, {
         ...options,
         headers: {
             ...headers,
