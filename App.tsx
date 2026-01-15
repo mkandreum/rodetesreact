@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import { Share2, Instagram, ShoppingBag, Calendar, Image as ImageIcon, Music, Ticket, X, CheckCircle, AlertTriangle, Edit, Trash, Plus, RefreshCw, Trophy, Settings } from 'lucide-react';
+import { Share2, Instagram, ShoppingBag, Calendar, Image as ImageIcon, Music, Ticket, X, CheckCircle, AlertTriangle, Edit, Trash, Plus, RefreshCw, Trophy, Settings, Menu, MapPin, Shirt } from 'lucide-react';
 import { AdminSettings } from './components/AdminSettings';
 import { AdminGallery } from './components/AdminGallery';
 import { AdminMerch } from './components/AdminMerch';
