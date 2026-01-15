@@ -553,3 +553,22 @@ input[type="checkbox"]:focus {
 .admin-gallery-item:hover .delete-img-btn {
     opacity: 1;
 }
+/* Promo Banner Marquee Override */
+@keyframes marquee {
+  0% { transform: translate(0, 0); }
+  100% { transform: translate(-100%, 0); }
+}
+
+#next-event-promo {
+    display: inline-block; 
+    padding-left: 100%;
+    animation: marquee 20s linear infinite;
+    will-change: transform; 
+    white-space: nowrap;
+    font-family: 'VT323', monospace; 
+    font-size: 1.5rem;
+    /* Color and Shadow handled by inline styles for Admin control */
+}
+#next-event-promo > span { display: inline-block; }
+#next-event-promo-container:hover #next-event-promo { animation-play-state: paused; }
+
