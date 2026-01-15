@@ -71,7 +71,7 @@ export const Layout: React.FC<LayoutProps> = ({
 
                     {/* Secondary Navigation Bar */}
                     {currentPage !== 'admin' && (
-                        <nav className="w-full bg-black border-b border-gray-700">
+                        <nav id="secondary-nav-container" className="w-full bg-black border-b border-gray-700">
                             <ul className="container mx-auto flex justify-around gap-4 py-2 px-4 overflow-x-auto no-scrollbar">
                                 {navItems.map(item => (
                                     <li key={item.id} className="flex-shrink-0">
