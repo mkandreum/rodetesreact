@@ -120,15 +120,6 @@ export const App: React.FC = () => {
     };
   }, [currentPage, state.events]);
 
-  // Toggle body class for promo banner
-  useEffect(() => {
-    if (state.promoEnabled && nextEvent) {
-      document.body.classList.add('promo-active');
-    } else {
-      document.body.classList.remove('promo-active');
-    }
-  }, [state.promoEnabled, nextEvent]);
-
   // Modal handlers
   const handleSelectEvent = (event: Event) => {
     setSelectedEvent(event);
