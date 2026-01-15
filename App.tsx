@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useStore } from './services/store';
 import { api } from './services/api';
 import { PageId, Event, Drag, MerchItem } from './types';
@@ -70,36 +70,8 @@ export const App: React.FC = () => {
     if (currentPage !== 'home' && adminTapCount < 4) navigate('home');
   };
 
-  // Calculate next event (memoized to prevent infinite renders)
-  const nextEvent = useMemo(() => {
-    return state.events.filter(e => !e.isArchived && new Date(e.date) > new Date())
-      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())[0];
-  }, [state.events]);
-
-  // Show minimal loading only if not loaded yet
-  if (!isLoaded) {
-    return (
-      <div className="min-h-screen bg-black">
-        <Layout
-          currentPage={currentPage}
-          promoEnabled={false}
-          promoNeonColor="#F02D7D"
-          promoCustomText=""
-          nextEvent={null}
-          isAdminLoggedIn={isAdminLoggedIn}
-          isMobileMenuOpen={isMobileMenuOpen}
-          appLogoUrl=""
-          onLogoTap={handleLogoTap}
-          onToggleMenu={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          onNavigate={navigate}
-        >
-          <div className="flex items-center justify-center h-64">
-            <p className="font-pixel text-white text-2xl">CARGANDO...</p>
-          </div>
-        </Layout>
-      </div>
-    );
-  }
+  // Calculate next event (needed by useEffect below)
+  const nextEvent = state.events.filter(e => !e.isArchived && new Date(e.date) > new Date()).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())[0];
 
   // Scroll reveal effect
   useEffect(() => {
@@ -118,7 +90,16 @@ export const App: React.FC = () => {
       elements.forEach(el => observer.unobserve(el));
       observer.disconnect();
     };
-  }, [currentPage]); // Removed state.events to prevent infinite loop
+  }, [currentPage, state.events]);
+
+  // Toggle body class for promo banner
+  useEffect(() => {
+    if (state.promoEnabled && nextEvent) {
+      document.body.classList.add('promo-active');
+    } else {
+      document.body.classList.remove('promo-active');
+    }
+  }, [state.promoEnabled, nextEvent]);
 
   // Modal handlers
   const handleSelectEvent = (event: Event) => {
