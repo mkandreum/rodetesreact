@@ -31,7 +31,7 @@ export const MerchPage: React.FC<MerchPageProps> = ({ onSelectMerch }) => {
                     <p className="text-xs font-pixel text-party-400 mb-2">{drag.name}</p>
                 )}
                 <div className="mt-auto">
-                    <span className="text-2xl font-extrabold text-white block mb-2">{item.price.toFixed(2)} €</span>
+                    <span className="text-2xl font-extrabold text-white block mb-2">{Number(item.price).toFixed(2)} €</span>
                     <button
                         onClick={() => onSelectMerch(item, drag)}
                         className="w-full neon-btn font-pixel text-sm py-1.5"
