@@ -9,19 +9,13 @@ router.get('/', async (req: Request, res: Response) => {
     try {
         client = await pool.connect();
         // Fetch all data in parallel using the SAME connection
-        const [
-            events,
-            drags,
-            merchItems,
-            settings,
-            scannedTickets
-        ] = await Promise.all([
-            client.query('SELECT * FROM events ORDER BY date ASC'),
-            client.query('SELECT * FROM drags ORDER BY name ASC'),
-            client.query('SELECT * FROM merch_items ORDER BY name ASC'),
-            client.query('SELECT * FROM app_settings WHERE id = 1'),
-            client.query('SELECT ticket_id, scanned_count FROM scanned_tickets')
-        ]);
+        // Fetch all data sequentially using the SAME connection to avoid pool exhaustion
+        // Note: pg.Client does not support concurrent queries
+        const events = await client.query('SELECT * FROM events ORDER BY date ASC');
+        const drags = await client.query('SELECT * FROM drags ORDER BY name ASC');
+        const merchItems = await client.query('SELECT * FROM merch_items ORDER BY name ASC');
+        const settings = await client.query('SELECT * FROM app_settings WHERE id = 1');
+        const scannedTickets = await client.query('SELECT ticket_id, scanned_count FROM scanned_tickets');
 
         // Construct state object
         const state = {
