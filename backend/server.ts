@@ -32,13 +32,7 @@ const PORT = process.env.PORT || 3001;
 // Pre-initialization
 // ============================================
 
-// Initialize admin password sync
-syncAdminPassword().catch(err => {
-    console.error('Failed to sync admin password:', err);
-    // In a real application, you might want to handle this more gracefully
-    // For now, we'll exit if admin password sync fails as it's critical
-    process.exit(1);
-});
+
 
 // ============================================
 // Middleware
@@ -136,13 +130,27 @@ app.use((err: any, req: Request, res: Response, next: any) => {
 // Initialize DB then start server
 let server: any;
 
-initDb().then(() => {
-    server = app.listen(Number(PORT), '0.0.0.0', () => {
-        console.log(`✓ Server running on port ${PORT}`);
-        console.log(`✓ Environment: ${process.env.NODE_ENV || 'development'}`);
-        console.log(`✓ Accessible at http://0.0.0.0:${PORT}`);
+initDb()
+    .then(async () => {
+        // Sync password after tables are created
+        try {
+            await syncAdminPassword();
+            console.log('✓ Admin password synchronized');
+        } catch (err) {
+            console.error('Warning: Failed to sync admin password:', err);
+            // We continue even if this fails, to avoid bricking deployment loop
+        }
+
+        server = app.listen(Number(PORT), '0.0.0.0', () => {
+            console.log(`✓ Server running on port ${PORT}`);
+            console.log(`✓ Environment: ${process.env.NODE_ENV || 'development'}`);
+            console.log(`✓ Accessible at http://0.0.0.0:${PORT}`);
+        });
+    })
+    .catch(err => {
+        console.error('Failed to initialize database:', err);
+        process.exit(1);
     });
-});
 
 // Graceful shutdown
 process.on('SIGTERM', async () => {
