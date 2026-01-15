@@ -97,3 +97,10 @@ export interface AppState {
   nextEventId: number;
   nextDragId: number;
 }
+
+export interface Guest {
+  name: string;
+  email: string;
+  guestsCount: number;
+  dietaryRestrictions: string;
+}

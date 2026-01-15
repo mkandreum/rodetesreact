@@ -115,7 +115,7 @@ const App: React.FC = () => {
       saleId,
       dragId: selectedMerch.drag ? selectedMerch.drag.id : null,
       dragName: selectedMerch.drag ? selectedMerch.drag.name : 'Web Merch',
-      itemId: selectedMerch.item.id,
+      merchItemId: selectedMerch.item.id,
       itemName: selectedMerch.item.name,
       itemPrice: selectedMerch.item.price,
       quantity: merchForm.quantity,
