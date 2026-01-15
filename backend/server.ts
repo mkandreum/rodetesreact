@@ -30,7 +30,8 @@ const PORT = process.env.PORT || 3001;
 // ============================================
 
 // Trust proxy (required for secure cookies behind Nginx/Load Balancer)
-app.set('trust proxy', 1);
+// Setting to true trusts standard headers (X-Forwarded-Proto, etc.) from any proxy, which is robust for Cloudflare+Coolify
+app.set('trust proxy', true);
 
 // Compression
 app.use(compression());

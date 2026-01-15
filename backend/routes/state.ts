@@ -43,8 +43,12 @@ router.get('/', async (req: Request, res: Response) => {
     }
 });
 
+import { requireAdmin } from '../middleware/auth';
+
+// ... (GET route)
+
 // POST save aggregated state (Legacy save.php equivalent)
-router.post('/', async (req: Request, res: Response) => {
+router.post('/', requireAdmin, async (req: Request, res: Response) => {
     const client = await pool.connect();
     try {
         await client.query('BEGIN');
