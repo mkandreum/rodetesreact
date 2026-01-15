@@ -26,7 +26,7 @@ import pool, { initDb } from './database/db';
 import { syncAdminPassword } from './utils/syncAdminPassword';
 
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 80;
 
 // ============================================
 // Pre-initialization
