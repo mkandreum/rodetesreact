@@ -130,27 +130,28 @@ app.use((err: any, req: Request, res: Response, next: any) => {
 // Initialize DB then start server
 let server: any;
 
-initDb()
-    .then(async () => {
-        // Sync password after tables are created
+async function startServer() {
+    try {
+        await initDb();
+        // Sync password only if DB is healthy
         try {
             await syncAdminPassword();
             console.log('✓ Admin password synchronized');
         } catch (err) {
             console.error('Warning: Failed to sync admin password:', err);
-            // We continue even if this fails, to avoid bricking deployment loop
         }
+    } catch (err) {
+        console.error('Warning: Database initialization failed (Server starting anyway):', err);
+    }
 
-        server = app.listen(Number(PORT), '0.0.0.0', () => {
-            console.log(`✓ Server running on port ${PORT}`);
-            console.log(`✓ Environment: ${process.env.NODE_ENV || 'development'}`);
-            console.log(`✓ Accessible at http://0.0.0.0:${PORT}`);
-        });
-    })
-    .catch(err => {
-        console.error('Failed to initialize database:', err);
-        // process.exit(1); // Don't crash container, retry might happen or logs might be needed
+    server = app.listen(Number(PORT), '0.0.0.0', () => {
+        console.log(`✓ Server running on port ${PORT}`);
+        console.log(`✓ Environment: ${process.env.NODE_ENV || 'development'}`);
+        console.log(`✓ Accessible at http://0.0.0.0:${PORT}`);
     });
+}
+
+startServer();
 
 // Graceful shutdown
 process.on('SIGTERM', async () => {
