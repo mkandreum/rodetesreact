@@ -7,7 +7,19 @@ const headers = {
     'Content-Type': 'application/json',
 };
 
-// ... (helper function unchanged)
+// Helper to convert snake_case to camelCase
+function toCamelCase(obj: any): any {
+    if (Array.isArray(obj)) {
+        return obj.map(v => toCamelCase(v));
+    } else if (obj !== null && obj.constructor === Object) {
+        return Object.keys(obj).reduce((result, key) => {
+            const camelKey = key.replace(/_([a-z])/g, (g) => g[1].toUpperCase());
+            result[camelKey] = toCamelCase(obj[key]);
+            return result;
+        }, {} as any);
+    }
+    return obj;
+}
 
 // Helper for API calls
 async function fetchApi<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
