@@ -12,7 +12,7 @@ export const DragsPage: React.FC<DragsPageProps> = ({ onSelectMerch }) => {
 
     return (
         <div className="space-y-12">
-            <h2 className="text-5xl font-pixel text-white text-center text-glow-white">NUESTRAS DRAGS</h2>
+            <h2 className="text-5xl font-pixel text-white text-left text-glow-white">NUESTRAS DRAGS</h2>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
                 {state.drags.map(drag => (
                     <div key={drag.id} className="bg-gray-900 border-2 hover:shadow-2xl transition-shadow duration-300" style={{ borderColor: drag.cardColor, boxShadow: `0 0 5px ${drag.cardColor}` }}>
@@ -41,7 +41,7 @@ export const DragsPage: React.FC<DragsPageProps> = ({ onSelectMerch }) => {
                                                         <img src={item.imageUrl} alt={item.name} className="w-full h-full object-cover" />
                                                     </div>
                                                     <p className="text-xs font-pixel truncate text-gray-300 group-hover:text-white">{item.name}</p>
-                                                    <p className="text-xs font-bold text-party-400">{item.price} €</p>
+                                                    <p className="text-xs font-bold text-party-400">{(item.price || 0)} €</p>
                                                 </div>
                                             ))}
                                         </div>

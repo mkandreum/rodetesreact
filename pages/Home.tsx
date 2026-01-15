@@ -19,12 +19,12 @@ export const Home: React.FC<HomeProps> = ({ onSelectEvent, onNavigate }) => {
         <div className="space-y-6">
             {/* Eventos Próximos/Pasados en Inicio */}
             <section>
-                <h2 className="text-3xl font-pixel text-white text-center mb-4 text-glow-white glitch-hover" data-text="EVENTOS">EVENTOS</h2>
+                <h2 className="text-3xl font-pixel text-white text-left mb-4 text-glow-white glitch-hover" data-text="EVENTOS">EVENTOS</h2>
 
                 <div id="home-event-list-container" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
                     {upcomingEvents.length > 0 ? (
                         upcomingEvents.map(event => (
-                            <div key={event.id} className="relative bg-gray-900 rounded-none border-gray-800 overflow-hidden flex flex-col transform transition-all hover:border-gray-600 duration-300 reveal-on-scroll visible border">
+                            <div key={event.id} className="relative bg-gray-900 rounded-none overflow-hidden flex flex-col transform transition-all duration-300 reveal-on-scroll visible">
                                 <div className="absolute top-0 left-0 text-white font-pixel text-sm px-2 py-1 rounded-none border-b border-r border-black z-10 shadow-md" style={{ backgroundColor: '#F02D7D' }}>
                                     PRÓXIMO EVENTO
                                 </div>
@@ -51,7 +51,7 @@ export const Home: React.FC<HomeProps> = ({ onSelectEvent, onNavigate }) => {
                             </div>
                         ))
                     ) : recentPastEvent ? (
-                        <div className="relative bg-gray-900 rounded-none border-gray-800 overflow-hidden flex flex-col transform transition-all hover:border-gray-600 duration-300 reveal-on-scroll border">
+                        <div className="relative bg-gray-900 rounded-none overflow-hidden flex flex-col transform transition-all duration-300 reveal-on-scroll">
                             <div className="absolute top-0 left-0 bg-red-700 text-white font-pixel text-sm px-2 py-1 rounded-none border-b border-r border-black z-10 shadow-md">FINALIZADO</div>
                             <div className="w-full bg-black border-b border-gray-800 overflow-hidden">
                                 <img src={recentPastEvent.posterImageUrl} alt={recentPastEvent.name} className="w-full opacity-60" />

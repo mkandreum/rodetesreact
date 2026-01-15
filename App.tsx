@@ -92,6 +92,17 @@ export const App: React.FC = () => {
     };
   }, [currentPage, state.events]);
 
+  // Check persistent auth session
+  useEffect(() => {
+    api.checkAuth()
+      .then((res: any) => {
+        if (res.authenticated) {
+          setIsAdminLoggedIn(true);
+        }
+      })
+      .catch(err => console.error('Auth check failed:', err));
+  }, []);
+
   // Toggle body class for promo banner
   useEffect(() => {
     if (state.promoEnabled && nextEvent) {

@@ -40,10 +40,10 @@ export const Layout: React.FC<LayoutProps> = ({
     ];
 
     return (
-        <div className="min-h-screen bg-black text-white font-sans selection:bg-party-500 selection:text-white">
-            {/* Promo Banner */}
+        <div className="min-h-screen bg-black text-white font-sans selection:bg-party-500 selection:text-white flex flex-col">
+            {/* Promo Banner - Static */}
             {promoEnabled && nextEvent && (
-                <div id="next-event-promo-container" className="fixed top-0 left-0 right-0 z-50 h-10 flex items-center border-b-2" style={{ borderColor: promoNeonColor, boxShadow: `0 0 10px ${promoNeonColor}` }}>
+                <div id="next-event-promo-container" className="w-full h-10 flex items-center border-b-2 z-50 relative" style={{ borderColor: promoNeonColor, boxShadow: `0 0 10px ${promoNeonColor}` }}>
                     <div id="next-event-promo" style={{ textShadow: `0 0 10px ${promoNeonColor}`, color: promoNeonColor }}>
                         {promoCustomText
                             .replace('{eventName}', nextEvent.name)
@@ -52,71 +52,74 @@ export const Layout: React.FC<LayoutProps> = ({
                 </div>
             )}
 
-            {/* Header */}
-            <header className={`fixed ${promoEnabled && nextEvent ? 'top-10' : 'top-0'} w-full transition-all bg-black border-b-2 border-white z-40`}>
-                <div className="container mx-auto px-4 h-20 flex justify-between items-center">
-                    <button onClick={onLogoTap} className="flex-shrink-0 group select-none">
-                        <img src={appLogoUrl || "/logo.png"} alt="RODETES" className="h-16 w-auto object-contain glitch-hover" />
-                    </button>
+            {/* Header & Nav Container - Relative so Mobile Menu positions correctly */}
+            <div className="relative z-40 bg-black">
+                {/* Header - Static */}
+                <header className="w-full bg-black border-b-2 border-white">
+                    <div className="container mx-auto px-4 h-20 flex justify-between items-center">
+                        <button onClick={onLogoTap} className="flex-shrink-0 group select-none">
+                            <img src={appLogoUrl || "/logo.png"} alt="RODETES" className="h-16 w-auto object-contain glitch-hover" />
+                        </button>
 
-                    <button onClick={onToggleMenu} className="p-2 text-white hover:text-party-500 transition-colors">
-                        {isMobileMenuOpen ? <X size={32} /> : <Menu size={32} />}
-                    </button>
-                </div>
-            </header>
+                        <button onClick={onToggleMenu} className="p-2 text-white hover:text-party-500 transition-colors">
+                            {isMobileMenuOpen ? <X size={32} /> : <Menu size={32} />}
+                        </button>
+                    </div>
+                </header>
 
-            {/* Secondary Navigation Bar */}
-            {currentPage !== 'admin' && (
-                <div id="secondary-nav-container" className={`fixed ${promoEnabled && nextEvent ? 'top-[120px]' : 'top-20'} left-0 right-0 w-full transition-all z-30 bg-black/95 backdrop-blur-sm border-b border-gray-700`}>
-                    <div className="container mx-auto px-4">
-                        <nav className="flex justify-around gap-4 py-2">
+                {/* Secondary Navigation Bar - Static */}
+                {currentPage !== 'admin' && (
+                    <nav className="w-full bg-black border-b border-gray-700">
+                        <ul className="container mx-auto flex justify-around gap-4 py-2 px-4 overflow-x-auto no-scrollbar">
+                            {navItems.map(item => (
+                                <li key={item.id} className="flex-shrink-0">
+                                    <button
+                                        onClick={() => onNavigate(item.id)}
+                                        className={`font-pixel text-lg md:text-xl relative group ${currentPage === item.id ? 'text-party-500' : 'text-gray-400 hover:text-white'}`}
+                                    >
+                                        {item.label}
+                                        <span className={`absolute -bottom-1 left-0 w-0 h-0.5 bg-party-500 transition-all group-hover:w-full ${currentPage === item.id ? 'w-full' : ''}`}></span>
+                                    </button>
+                                </li>
+                            ))}
+                        </ul>
+                    </nav>
+                )}
+
+                {/* Mobile Menu Overlay - Absolute relative to this container */}
+                {isMobileMenuOpen && (
+                    <div id="mobile-menu" className="absolute top-full right-4 z-50 bg-black border-2 border-white w-64 shadow-lg shadow-white/30 rounded-none animate-fade-in">
+                        <div className="px-2 pt-2 pb-3 space-y-1">
                             {navItems.map((item) => (
                                 <button
                                     key={item.id}
                                     onClick={() => onNavigate(item.id)}
-                                    className={`font-pixel uppercase text-base transition-colors ${currentPage === item.id
-                                        ? 'text-white text-glow-white'
-                                        : 'text-gray-500 hover:text-white'}`}
+                                    className={`block w-full text-left px-3 py-2 font-pixel text-lg rounded-md transition-colors ${currentPage === item.id
+                                        ? 'bg-gray-700 text-white'
+                                        : 'text-gray-300 hover:bg-gray-700 hover:text-white'
+                                        }`}
                                 >
                                     {item.label}
                                 </button>
                             ))}
-                        </nav>
+                            {isAdminLoggedIn && (
+                                <button
+                                    onClick={() => onNavigate('admin')}
+                                    className="block w-full text-left px-3 py-2 font-pixel text-lg text-gray-300 hover:bg-gray-700 hover:text-white rounded-md border-t border-gray-700 mt-2 pt-2"
+                                >
+                                    ADMIN
+                                </button>
+                            )}
+                        </div>
                     </div>
-                </div>
-            )}
+                )}
+            </div>
 
-            {/* Mobile Menu Overlay */}
-            {isMobileMenuOpen && (
-                <div id="mobile-menu" className={`absolute ${promoEnabled && nextEvent ? 'top-[120px]' : 'top-20'} right-4 z-50 bg-black border-2 border-white w-64 shadow-lg shadow-white/30 rounded-none animate-fade-in`}>
-                    <div className="px-2 pt-2 pb-3 space-y-1">
-                        {navItems.map((item) => (
-                            <button
-                                key={item.id}
-                                onClick={() => onNavigate(item.id)}
-                                className={`block w-full text-left px-3 py-2 font-pixel text-lg rounded-md transition-colors ${currentPage === item.id
-                                    ? 'bg-gray-700 text-white'
-                                    : 'text-gray-300 hover:bg-gray-700 hover:text-white'
-                                    }`}
-                            >
-                                {item.label}
-                            </button>
-                        ))}
-                        {isAdminLoggedIn && (
-                            <button
-                                onClick={() => onNavigate('admin')}
-                                className="block w-full text-left px-3 py-2 font-pixel text-lg text-gray-300 hover:bg-gray-700 hover:text-white rounded-md border-t border-gray-700 mt-2 pt-2"
-                            >
-                                ADMIN
-                            </button>
-                        )}
-                    </div>
+            {/* Main Content - No top padding needed */}
+            <main className="flex-grow container mx-auto px-4 py-8 min-h-screen flex flex-col">
+                <div className="flex-grow">
+                    {children}
                 </div>
-            )}
-
-            {/* Main Content */}
-            <main className={`container mx-auto px-4 sm:px-6 lg:px-8 pb-20 ${promoEnabled && nextEvent ? 'pt-48' : 'pt-40'}`}>
-                {children}
             </main>
 
             {/* Footer */}

@@ -11,10 +11,10 @@ export const EventsPage: React.FC<EventsPageProps> = ({ onSelectEvent }) => {
 
     return (
         <div className="space-y-4">
-            <h2 className="text-3xl font-pixel text-white text-center mb-4 text-glow-white">AGENDA</h2>
+            <h2 className="text-5xl font-pixel text-white text-left mb-8 text-glow-white">EVENTOS</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {state.events.filter(e => !e.isArchived).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()).map(event => (
-                    <div key={event.id} className="relative bg-gray-900 rounded-none border-gray-800 overflow-hidden flex flex-col transform transition-all hover:border-gray-600 duration-300 border">
+                    <div key={event.id} className="relative bg-gray-900 rounded-none overflow-hidden flex flex-col transform transition-all duration-300">
                         {new Date(event.date) > new Date() && (
                             <div className="absolute top-0 left-0 text-white font-pixel text-sm px-2 py-1 rounded-none border-b border-r border-black z-10 shadow-md" style={{ backgroundColor: '#F02D7D' }}>
                                 PRÓXIMO EVENTO

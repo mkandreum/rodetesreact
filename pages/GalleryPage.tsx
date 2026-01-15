@@ -11,7 +11,7 @@ export const GalleryPage: React.FC<GalleryPageProps> = ({ onSelectImage }) => {
 
     return (
         <div className="space-y-12">
-            <h2 className="text-5xl font-pixel text-white text-center text-glow-white">GALERÍAS</h2>
+            <h2 className="text-5xl font-pixel text-white text-left mb-8 text-glow-white">GALERÍAS</h2>
             {state.events.filter(e => e.galleryImages.length > 0).map(event => (
                 <div key={event.id} className="border-t border-gray-800 pt-8 animate-fade-in">
                     <h3 className="text-3xl font-pixel text-white mb-6 pl-4 border-l-4 border-party-500 flex items-center gap-3">
@@ -36,7 +36,7 @@ export const GalleryPage: React.FC<GalleryPageProps> = ({ onSelectImage }) => {
             {/* Drags Galleries */}
             {state.drags.filter(d => d.galleryImages.length > 0).length > 0 && (
                 <div className="pt-12 border-t border-gray-800">
-                    <h2 className="text-4xl font-pixel text-party-500 text-center mb-12 text-glow-party">BOOK DE REINAS</h2>
+                    <h2 className="text-4xl font-pixel text-party-500 text-left mb-12 text-glow-party">BOOK DE REINAS</h2>
                     {state.drags.filter(d => d.galleryImages.length > 0).map(drag => (
                         <div key={drag.id} className="mb-16 animate-fade-in">
                             <h3 className="text-3xl font-pixel text-white mb-6 pl-4 border-l-4 flex items-center gap-3" style={{ borderColor: drag.cardColor }}>

@@ -31,7 +31,7 @@ export const MerchPage: React.FC<MerchPageProps> = ({ onSelectMerch }) => {
                     <p className="text-xs font-pixel text-party-400 mb-2">{drag.name}</p>
                 )}
                 <div className="mt-auto">
-                    <span className="text-2xl font-extrabold text-white block mb-2">{item.price.toFixed(2)} €</span>
+                    <span className="text-2xl font-extrabold text-white block mb-2">{(item.price || 0).toFixed(2)} €</span>
                     <button
                         onClick={() => onSelectMerch(item, drag)}
                         className="w-full neon-btn font-pixel text-sm py-1.5"
@@ -45,7 +45,7 @@ export const MerchPage: React.FC<MerchPageProps> = ({ onSelectMerch }) => {
 
     return (
         <div className="space-y-6">
-            <h2 className="text-3xl font-pixel text-white text-center mb-4 text-glow-white">MERCHANDISING</h2>
+            <h2 className="text-5xl font-pixel text-white text-left mb-8 text-glow-white">MERCHANDISING</h2>
 
             {/* RODETES OFICIAL */}
             <section>
