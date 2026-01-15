@@ -103,8 +103,10 @@ app.use((err: any, req: Request, res: Response, next: any) => {
 // ============================================
 
 // Initialize DB then start server
+let server: any;
+
 initDb().then(() => {
-    const server = app.listen(Number(PORT), '0.0.0.0', () => {
+    server = app.listen(Number(PORT), '0.0.0.0', () => {
         console.log(`✓ Server running on port ${PORT}`);
         console.log(`✓ Environment: ${process.env.NODE_ENV || 'development'}`);
         console.log(`✓ Accessible at http://0.0.0.0:${PORT}`);
@@ -114,12 +116,16 @@ initDb().then(() => {
 // Graceful shutdown
 process.on('SIGTERM', async () => {
     console.log('SIGTERM received, closing server...');
-    server.close(() => {
-        pool.end().then(() => {
-            console.log('Database pool closed');
-            process.exit(0);
+    if (server) {
+        server.close(() => {
+            pool.end().then(() => {
+                console.log('Database pool closed');
+                process.exit(0);
+            });
         });
-    });
+    } else {
+        process.exit(0);
+    }
 });
 
 export default app;
