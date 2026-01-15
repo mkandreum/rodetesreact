@@ -12,7 +12,7 @@ export const AdminAccessModal: React.FC<AdminAccessModalProps> = ({ onEnter }) =
                 <p className="font-pixel text-white text-lg mb-8">BIENVENIDO AL PANEL DE CONTROL</p>
                 <button
                     onClick={onEnter}
-                    className="w-full bg-neon-cyan text-black font-pixel text-2xl py-3 hover:bg-white transition-colors"
+                    className="w-full neon-btn font-pixel text-2xl py-3"
                 >
                     ENTRAR
                 </button>

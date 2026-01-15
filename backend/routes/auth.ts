@@ -9,6 +9,8 @@ router.post('/login', async (req: Request, res: Response) => {
     try {
         const { username, password } = req.body;
 
+        console.log('🔑 Login attempt:', { username, hasPassword: !!password });
+
         if (!username || !password) {
             res.status(400).json({ error: 'Username and password required' });
             return;
@@ -21,6 +23,7 @@ router.post('/login', async (req: Request, res: Response) => {
         );
 
         if (result.rows.length === 0) {
+            console.log('❌ User not found');
             res.status(401).json({ error: 'Invalid credentials' });
             return;
         }
@@ -31,6 +34,7 @@ router.post('/login', async (req: Request, res: Response) => {
         const isValid = await bcrypt.compare(password, user.password_hash);
 
         if (!isValid) {
+            console.log('❌ Invalid password');
             res.status(401).json({ error: 'Invalid credentials' });
             return;
         }
@@ -40,12 +44,24 @@ router.post('/login', async (req: Request, res: Response) => {
             req.session.isLoggedIn = true;
             req.session.isAdmin = true;
             req.session.username = user.username;
-        }
 
-        res.json({
-            success: true,
-            username: user.username
-        });
+            // CRITICAL: Explicitly save session to ensure it persists
+            req.session.save((err) => {
+                if (err) {
+                    console.error('❌ Session save error:', err);
+                    res.status(500).json({ error: 'Session error' });
+                    return;
+                }
+                console.log('✅ Login success, session saved:', req.sessionID);
+                res.json({
+                    success: true,
+                    username: user.username
+                });
+            });
+        } else {
+            console.error('❌ Session not available');
+            res.status(500).json({ error: 'Session not available' });
+        }
 
     } catch (error) {
         console.error('Login error:', error);
@@ -72,6 +88,7 @@ router.post('/logout', (req: Request, res: Response) => {
 router.get('/status', (req: Request, res: Response) => {
     res.json({
         isLoggedIn: req.session?.isLoggedIn || false,
+        isAdmin: req.session?.isAdmin || false,
         username: req.session?.username || null
     });
 });

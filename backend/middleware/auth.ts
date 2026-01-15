@@ -20,9 +20,19 @@ export const requireAuth = (req: Request, res: Response, next: NextFunction) => 
 
 // Admin check
 export const requireAdmin = (req: Request, res: Response, next: NextFunction) => {
-    if (!req.session || !req.session.isLoggedIn || !req.session.isAdmin) {
+    console.log('🔐 Admin check:', {
+        hasSession: !!req.session,
+        sessionID: req.sessionID,
+        isAdmin: (req.session as any)?.isAdmin,
+        cookies: req.headers.cookie
+    });
+
+    if (!(req.session as any)?.isAdmin) {
+        console.log('❌ Admin check failed - not admin');
         res.status(403).json({ error: 'Admin access required' });
         return;
     }
+
+    console.log('✅ Admin check passed');
     next();
 };

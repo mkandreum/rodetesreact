@@ -39,7 +39,7 @@ export const MerchModal: React.FC<MerchModalProps> = ({ item, drag, onClose, onS
                         <div><label className="block font-pixel text-gray-400 text-sm mb-1">APELLIDOS</label><input required className="w-full bg-gray-900 border border-gray-700 p-2 text-white" value={form.surname} onChange={e => setForm({ ...form, surname: e.target.value })} /></div>
                         <div><label className="block font-pixel text-gray-400 text-sm mb-1">EMAIL</label><input type="email" required className="w-full bg-gray-900 border border-gray-700 p-2 text-white" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} /></div>
                         <div><label className="block font-pixel text-gray-400 text-sm mb-1">CANTIDAD</label><input type="number" min="1" required className="w-full bg-gray-900 border border-gray-700 p-2 text-white" value={form.quantity} onChange={e => setForm({ ...form, quantity: parseInt(e.target.value) })} /></div>
-                        <button type="submit" className="w-full bg-white text-black font-pixel text-2xl py-2 mt-4 hover:bg-gray-200">CONFIRMAR PEDIDO</button>
+                        <button type="submit" className="w-full neon-btn font-pixel text-2xl py-2 mt-4">CONFIRMAR PEDIDO</button>
                     </form>
                 ) : (
                     <div className="text-center space-y-4">
