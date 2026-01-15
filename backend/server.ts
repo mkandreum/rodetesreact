@@ -1,8 +1,11 @@
 import express, { Request, Response } from 'express';
 import session from 'express-session';
+import connectPgSimple from 'connect-pg-simple';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import path from 'path';
+
+const PgSession = connectPgSimple(session);
 
 // Routes
 import authRoutes from './routes/auth';
@@ -37,6 +40,10 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // Session management
 app.use(session({
+    store: new PgSession({
+        pool: pool,
+        createTableIfMissing: true
+    }),
     secret: process.env.SESSION_SECRET || 'change-this-secret',
     resave: false,
     saveUninitialized: false,

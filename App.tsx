@@ -251,7 +251,9 @@ export const App: React.FC = () => {
 
   const handleAdminLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    if (adminEmailInput === 'admin' && adminPassInput === 'rodetes') {
+    const adminUser = (import.meta as any).env.VITE_ADMIN_USER || 'admin';
+    const adminPass = (import.meta as any).env.VITE_ADMIN_PASS || 'rodetes';
+    if (adminEmailInput === adminUser && adminPassInput === adminPass) {
       setIsAdminLoggedIn(true);
     } else {
       alert('Credenciales incorrectas (Usuario: admin / Pass: rodetes)');
@@ -296,7 +298,7 @@ export const App: React.FC = () => {
       {/* Secondary Navigation Bar (Visible on ALL screens) */}
       <div id="secondary-nav-container" className={`fixed ${state.promoEnabled && nextEvent ? 'top-[120px]' : 'top-20'} w-full transition-all`}>
         <div className="container mx-auto">
-          <nav className="flex overflow-x-auto whitespace-nowrap scrollbar-hide justify-center md:justify-center">
+          <nav className="flex flex-wrap justify-center md:justify-center gap-2">
             {navItems.map((item) => (
               <button
                 key={item.id}

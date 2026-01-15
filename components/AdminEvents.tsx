@@ -3,6 +3,7 @@ import { useStore } from '../services/store';
 import { Edit, Trash, Plus, X } from 'lucide-react';
 import { Event } from '../types';
 import { api } from '../services/api';
+import { FileUpload } from './FileUpload';
 
 export const AdminEvents: React.FC = () => {
     const { state, updateState } = useStore(); // We'll need refresh or update actions
@@ -111,7 +112,13 @@ export const AdminEvents: React.FC = () => {
                                 <div className="flex-1"><label className="text-sm font-pixel text-gray-400">PRECIO (€)</label><input className="w-full bg-black border border-gray-600 p-2 text-white focus:border-party-500 outline-none" type="number" value={editingEvent.price || 0} onChange={e => setEditingEvent({ ...editingEvent, price: parseFloat(e.target.value) })} /></div>
                                 <div className="flex-1"><label className="text-sm font-pixel text-gray-400">CAPACIDAD</label><input className="w-full bg-black border border-gray-600 p-2 text-white focus:border-party-500 outline-none" type="number" value={editingEvent.ticketCapacity || 0} onChange={e => setEditingEvent({ ...editingEvent, ticketCapacity: parseInt(e.target.value) })} /></div>
                             </div>
-                            <div><label className="text-sm font-pixel text-gray-400">IMAGEN URL</label><input className="w-full bg-black border border-gray-600 p-2 text-white focus:border-party-500 outline-none" value={editingEvent.posterImageUrl || ''} onChange={e => setEditingEvent({ ...editingEvent, posterImageUrl: e.target.value })} /></div>
+                            <div>
+                                <label className="text-sm font-pixel text-gray-400">IMAGEN URL (O SUBIR)</label>
+                                <div className="space-y-2">
+                                    <input className="w-full bg-black border border-gray-600 p-2 text-white focus:border-party-500 outline-none" value={editingEvent.posterImageUrl || ''} onChange={e => setEditingEvent({ ...editingEvent, posterImageUrl: e.target.value })} placeholder="https://..." />
+                                    <FileUpload onUpload={(url) => setEditingEvent({ ...editingEvent, posterImageUrl: url })} label="SUBIR IMAGEN" />
+                                </div>
+                            </div>
                             <div><label className="text-sm font-pixel text-gray-400">DESCRIPCIÓN</label><textarea className="w-full bg-black border border-gray-600 p-2 text-white h-24 focus:border-party-500 outline-none" value={editingEvent.description || ''} onChange={e => setEditingEvent({ ...editingEvent, description: e.target.value })} /></div>
                         </div>
 

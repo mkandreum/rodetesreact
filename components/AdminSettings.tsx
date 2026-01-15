@@ -52,10 +52,10 @@ export const AdminSettings: React.FC = () => {
                             <span className="text-gray-500 font-pixel">SIN LOGO</span>
                         )}
                     </div>
-                    <FileUpload
-                        onUpload={(url) => updateSetting('appLogoUrl', url)}
-                        label="CAMBIAR LOGO APP"
-                    />
+                    <div className="flex gap-2">
+                        <input className="flex-1 bg-black border border-gray-600 p-2 text-white focus:border-neon-pink outline-none" value={state.appLogoUrl || ''} onChange={e => updateSetting('appLogoUrl', e.target.value)} />
+                        <FileUpload onUpload={(url) => updateSetting('appLogoUrl', url)} label="SUBIR" className="w-auto" />
+                    </div>
                 </div>
 
                 <div className="space-y-2">
@@ -67,10 +67,10 @@ export const AdminSettings: React.FC = () => {
                             <span className="text-gray-500 font-pixel">SIN LOGO</span>
                         )}
                     </div>
-                    <FileUpload
-                        onUpload={(url) => updateSetting('ticketLogoUrl', url)}
-                        label="CAMBIAR LOGO TICKETS"
-                    />
+                    <div className="flex gap-2">
+                        <input className="flex-1 bg-black border border-gray-600 p-2 text-white focus:border-neon-pink outline-none" value={state.ticketLogoUrl || ''} onChange={e => updateSetting('ticketLogoUrl', e.target.value)} />
+                        <FileUpload onUpload={(url) => updateSetting('ticketLogoUrl', url)} label="SUBIR" className="w-auto" />
+                    </div>
                 </div>
             </div>
 
@@ -86,11 +86,10 @@ export const AdminSettings: React.FC = () => {
                         )}
                     </div>
                 )}
-                <FileUpload
-                    onUpload={(url) => updateSetting('bannerVideoUrl', url)}
-                    label="SUBIR BANNER"
-                    accept="image/*,video/mp4,video/webm"
-                />
+                <div className="flex gap-2">
+                    <input className="flex-1 bg-black border border-gray-600 p-2 text-white focus:border-neon-pink outline-none" value={state.bannerVideoUrl || ''} onChange={e => updateSetting('bannerVideoUrl', e.target.value)} />
+                    <FileUpload onUpload={(url) => updateSetting('bannerVideoUrl', url)} label="SUBIR" accept="image/*,video/mp4,video/webm" className="w-auto" />
+                </div>
             </div>
 
             {/* Promo Banner */}
@@ -165,7 +164,7 @@ export const AdminSettings: React.FC = () => {
             </div>
 
             {message && (
-                <div className={`p-4 border ${message.type === 'success' ? 'bg-green-900/20 text-green-400 border-green-500' : 'bg-red-900/20 text-red-400 border-red-500'} font-pixel`}>
+                <div className={`p-4 border ${message.type === 'success' ? 'bg-green-900/20 text-green-400 border-green-500' : 'bg-red-900/20 text-red-400 border-red-500'} font-pixel mt-4`}>
                     {message.text}
                 </div>
             )}

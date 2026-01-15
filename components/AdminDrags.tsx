@@ -3,6 +3,7 @@ import { useStore } from '../services/store';
 import { Edit, Trash, Plus, X } from 'lucide-react';
 import { Drag } from '../types';
 import { api } from '../services/api';
+import { FileUpload } from './FileUpload';
 
 export const AdminDrags: React.FC = () => {
     const { state, updateState } = useStore();
@@ -104,7 +105,13 @@ export const AdminDrags: React.FC = () => {
                             <div><label className="text-sm font-pixel text-gray-400">NOMBRE</label><input className="w-full bg-black border border-gray-700 p-2 text-white focus:border-party-500 outline-none" value={editingDrag.name || ''} onChange={e => setEditingDrag({ ...editingDrag, name: e.target.value })} /></div>
                             <div><label className="text-sm font-pixel text-gray-400">INSTAGRAM</label><input className="w-full bg-black border border-gray-700 p-2 text-white focus:border-party-500 outline-none" value={editingDrag.instagramHandle || ''} onChange={e => setEditingDrag({ ...editingDrag, instagramHandle: e.target.value })} /></div>
                             <div><label className="text-sm font-pixel text-gray-400">COLOR CARD (HEX)</label><input className="w-full bg-black border border-gray-700 p-2 text-white h-12 cursor-pointer focus:border-party-500 outline-none" type="color" value={editingDrag.cardColor || '#ffffff'} onChange={e => setEditingDrag({ ...editingDrag, cardColor: e.target.value })} /></div>
-                            <div><label className="text-sm font-pixel text-gray-400">IMAGEN URL</label><input className="w-full bg-black border border-gray-700 p-2 text-white focus:border-party-500 outline-none" value={editingDrag.coverImageUrl || ''} onChange={e => setEditingDrag({ ...editingDrag, coverImageUrl: e.target.value })} /></div>
+                            <div>
+                                <label className="text-sm font-pixel text-gray-400">IMAGEN URL (O SUBIR)</label>
+                                <div className="space-y-2">
+                                    <input className="w-full bg-black border border-gray-700 p-2 text-white focus:border-party-500 outline-none" value={editingDrag.coverImageUrl || ''} onChange={e => setEditingDrag({ ...editingDrag, coverImageUrl: e.target.value })} placeholder="https://..." />
+                                    <FileUpload onUpload={(url) => setEditingDrag({ ...editingDrag, coverImageUrl: url })} label="SUBIR IMAGEN" />
+                                </div>
+                            </div>
                             <div><label className="text-sm font-pixel text-gray-400">DESCRIPCIÓN</label><textarea className="w-full bg-black border border-gray-700 p-2 text-white h-24 focus:border-party-500 outline-none" value={editingDrag.description || ''} onChange={e => setEditingDrag({ ...editingDrag, description: e.target.value })} /></div>
                         </div>
 
