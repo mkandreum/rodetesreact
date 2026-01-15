@@ -64,7 +64,7 @@ export const Layout: React.FC<LayoutProps> = ({
                             </button>
 
                             <button onClick={onToggleMenu} className="p-2 text-white hover:text-party-500 transition-colors">
-                                {isMobileMenuOpen ? <X size={32} /> : <Menu size={32} />}
+                                {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
                             </button>
                         </div>
                     </header>

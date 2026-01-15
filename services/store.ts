@@ -23,17 +23,31 @@ const INITIAL_STATE: AppState = {
 };
 
 export const useStore = () => {
-  const [state, setState] = useState<AppState>(INITIAL_STATE);
+  // Cache-First Initialization
+  const [state, setState] = useState<AppState>(() => {
+    try {
+      const cached = localStorage.getItem('rodetes_state');
+      return cached ? { ...INITIAL_STATE, ...JSON.parse(cached) } : INITIAL_STATE;
+    } catch {
+      return INITIAL_STATE;
+    }
+  });
+
   const [isLoaded, setIsLoaded] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Load initial data from API
+  // Load initial data from API and update cache
   useEffect(() => {
     const loadData = async () => {
       try {
         const data = await api.loadState();
         // Merge with initial state to ensure all fields exist
-        setState(prev => ({ ...prev, ...data }));
+        setState(prev => {
+          const next = { ...prev, ...data };
+          // Persist to local storage for instant load next time
+          localStorage.setItem('rodetes_state', JSON.stringify(next));
+          return next;
+        });
         setIsLoaded(true);
       } catch (err) {
         console.error("Failed to load state from API:", err);
