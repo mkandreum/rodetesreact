@@ -52,7 +52,7 @@ export const AdminSettings: React.FC = () => {
                             <span className="text-gray-500 font-pixel">SIN LOGO</span>
                         )}
                     </div>
-                    <FileUpload onUpload={(url) => updateSetting('appLogoUrl', url)} label="SUBIR IMAGEN" className="w-full" />
+                    <FileUpload onUpload={(url) => updateSetting('appLogoUrl', `${url}?v=${Date.now()}`)} label="SUBIR IMAGEN" className="w-full" />
                 </div>
 
                 <div className="space-y-2">

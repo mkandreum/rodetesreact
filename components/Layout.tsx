@@ -14,6 +14,7 @@ interface LayoutProps {
     onLogoTap: () => void;
     onToggleMenu: () => void;
     onNavigate: (page: PageId) => void;
+    appLogoUrl?: string; // New prop
 }
 
 export const Layout: React.FC<LayoutProps> = ({
@@ -27,7 +28,8 @@ export const Layout: React.FC<LayoutProps> = ({
     isMobileMenuOpen,
     onLogoTap,
     onToggleMenu,
-    onNavigate
+    onNavigate,
+    appLogoUrl // Destructure
 }) => {
     const navItems: { id: PageId, label: string }[] = [
         { id: 'home', label: 'INICIO' },
@@ -54,7 +56,7 @@ export const Layout: React.FC<LayoutProps> = ({
             <header className={`fixed ${promoEnabled && nextEvent ? 'top-10' : 'top-0'} w-full transition-all bg-black border-b-2 border-white z-40`}>
                 <div className="container mx-auto px-4 h-20 flex justify-between items-center">
                     <button onClick={onLogoTap} className="flex-shrink-0 group select-none">
-                        <img src="/logo.png" alt="RODETES" className="h-16 w-auto object-contain glitch-hover" />
+                        <img src={appLogoUrl || "/logo.png"} alt="RODETES" className="h-16 w-auto object-contain glitch-hover" />
                     </button>
 
                     <button onClick={onToggleMenu} className="p-2 text-white hover:text-party-500 transition-colors">

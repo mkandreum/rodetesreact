@@ -168,6 +168,7 @@ export const App: React.FC = () => {
       onLogoTap={handleLogoTap}
       onToggleMenu={() => { setIsMobileMenuOpen(!isMobileMenuOpen); handleSecretTap(); }}
       onNavigate={navigate}
+      appLogoUrl={state.appLogoUrl}
     >
       {/* Page Routing */}
       {currentPage === 'home' && <Home onSelectEvent={handleSelectEvent} onNavigate={navigate} />}
