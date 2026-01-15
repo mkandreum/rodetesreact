@@ -55,60 +55,62 @@ export const api = {
             promoNeonColor: data.settings?.promoNeonColor || '#F02D7D',
             allowedDomains: data.settings?.allowedDomains || []
         };
-        saveState: (state: any) => {
-            // We only send writable parts
-            const payload = {
-                events: state.events,
-                drags: state.drags,
-                settings: {
-                    appLogoUrl: state.appLogoUrl,
-                    ticketLogoUrl: state.ticketLogoUrl,
-                    bannerVideoUrl: state.bannerVideoUrl,
-                    promoEnabled: state.promoEnabled,
-                    promoCustomText: state.promoCustomText,
-                    promoNeonColor: state.promoNeonColor,
-                    allowedDomains: state.allowedDomains
-                }
-            };
-            return fetchApi('/state', { method: 'POST', body: JSON.stringify(payload) });
-        },
+    },
 
-            // Auth
-            login: (credentials: any) => fetchApi('/auth/login', { method: 'POST', body: JSON.stringify(credentials) }),
-                checkAuth: () => fetchApi('/auth/status'),
-                    logout: () => fetchApi('/auth/logout', { method: 'POST' }),
+    saveState: (state: any) => {
+        // We only send writable parts
+        const payload = {
+            events: state.events,
+            drags: state.drags,
+            settings: {
+                appLogoUrl: state.appLogoUrl,
+                ticketLogoUrl: state.ticketLogoUrl,
+                bannerVideoUrl: state.bannerVideoUrl,
+                promoEnabled: state.promoEnabled,
+                promoCustomText: state.promoCustomText,
+                promoNeonColor: state.promoNeonColor,
+                allowedDomains: state.allowedDomains
+            }
+        };
+        return fetchApi('/state', { method: 'POST', body: JSON.stringify(payload) });
+    },
 
-                        // Tickets
-                        buyTicket: (data: any) => fetchApi('/tickets', { method: 'POST', body: JSON.stringify(data) }),
-                            scanTicket: (ticketId: string) => fetchApi('/tickets/scan', { method: 'POST', body: JSON.stringify({ ticket_id: ticketId }) }),
-                                getTickets: () => fetchApi<Ticket[]>('/tickets'), // Admin only
-                                    deleteTicket: (id: number) => fetchApi(`/tickets/${id}`, { method: 'DELETE' }),
+    // Auth
+    login: (credentials: any) => fetchApi('/auth/login', { method: 'POST', body: JSON.stringify(credentials) }),
+    checkAuth: () => fetchApi('/auth/status'),
+    logout: () => fetchApi('/auth/logout', { method: 'POST' }),
 
-                                        // Merch
-                                        buyMerch: (data: any) => fetchApi('/merch/buy', { method: 'POST', body: JSON.stringify(data) }),
-                                            getSales: () => fetchApi<MerchSale[]>('/merch/sales'), // Admin only
-                                                updateSaleStatus: (id: string, status: string) => fetchApi(`/merch/sales/${id}/status`, { method: 'PATCH', body: JSON.stringify({ status }) }),
+    // Tickets
+    buyTicket: (data: any) => fetchApi('/tickets', { method: 'POST', body: JSON.stringify(data) }),
+    scanTicket: (ticketId: string) => fetchApi('/tickets/scan', { method: 'POST', body: JSON.stringify({ ticket_id: ticketId }) }),
+    getTickets: () => fetchApi<Ticket[]>('/tickets'), // Admin only
+    deleteTicket: (id: number) => fetchApi(`/tickets/${id}`, { method: 'DELETE' }),
 
-                                                    // Items CRUD
-                                                    addMerchItem: (data: any) => fetchApi('/merch/items', { method: 'POST', body: JSON.stringify(data) }),
-                                                        deleteMerchItem: (id: number) => fetchApi(`/merch/items/${id}`, { method: 'DELETE' }),
+    // Merch
+    buyMerch: (data: any) => fetchApi('/merch/buy', { method: 'POST', body: JSON.stringify(data) }),
+    getSales: () => fetchApi<MerchSale[]>('/merch/sales'), // Admin only
+    updateSaleStatus: (id: string, status: string) => fetchApi(`/merch/sales/${id}/status`, { method: 'PATCH', body: JSON.stringify({ status }) }),
 
-                                                            // Upload
-                                                            uploadFile: async (file: File) => {
-                                                                const formData = new FormData();
-                                                                formData.append('file', file);
+    // Items CRUD
+    addMerchItem: (data: any) => fetchApi('/merch/items', { method: 'POST', body: JSON.stringify(data) }),
+    deleteMerchItem: (id: number) => fetchApi(`/merch/items/${id}`, { method: 'DELETE' }),
 
-                                                                const res = await fetch(`${API_URL}/api/upload`, {
-                                                                    method: 'POST',
-                                                                    body: formData, // No Content-Type header (browser sets it with boundary)
-                                                                });
+    // Upload
+    uploadFile: async (file: File) => {
+        const formData = new FormData();
+        formData.append('file', file);
 
-                                                                if (!res.ok) throw new Error('Upload failed');
-                                                                return res.json();
-                                                            },
+        const res = await fetch(`${API_URL}/api/upload`, {
+            method: 'POST',
+            body: formData, // No Content-Type header (browser sets it with boundary)
+        });
 
-                                                                // Backup
-                                                                downloadBackup: () => {
-                                                                    window.location.href = `${API_URL}/api/backup`;
-                                                                }
-    };
+        if (!res.ok) throw new Error('Upload failed');
+        return res.json();
+    },
+
+    // Backup
+    downloadBackup: () => {
+        window.location.href = `${API_URL}/api/backup`;
+    }
+};

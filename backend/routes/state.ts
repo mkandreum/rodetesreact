@@ -41,19 +41,20 @@ router.get('/', async (req: Request, res: Response) => {
 
     } catch (error) {
         console.error('Error fetching state:', error);
-        res.status(500).json({ error: 'Failed to load app state' });
     }
-    // POST save aggregated state (Legacy save.php equivalent)
-    router.post('/', async (req: Request, res: Response) => {
-        const client = await pool.connect();
-        try {
-            await client.query('BEGIN');
+});
 
-            const { events, drags, settings } = req.body;
+// POST save aggregated state (Legacy save.php equivalent)
+router.post('/', async (req: Request, res: Response) => {
+    const client = await pool.connect();
+    try {
+        await client.query('BEGIN');
 
-            // 1. Settings (Upsert)
-            if (settings) {
-                await client.query(`
+        const { events, drags, settings } = req.body;
+
+        // 1. Settings (Upsert)
+        if (settings) {
+            await client.query(`
                 INSERT INTO app_settings (id, app_logo_url, ticket_logo_url, banner_video_url, promo_enabled, promo_custom_text, promo_neon_color, allowed_domains)
                 VALUES (1, $1, $2, $3, $4, $5, $6, $7)
                 ON CONFLICT (id) DO UPDATE SET
@@ -65,28 +66,28 @@ router.get('/', async (req: Request, res: Response) => {
                     promo_neon_color = EXCLUDED.promo_neon_color,
                     allowed_domains = EXCLUDED.allowed_domains
             `, [
-                    settings.appLogoUrl,
-                    settings.ticketLogoUrl,
-                    settings.bannerVideoUrl,
-                    settings.promoEnabled,
-                    settings.promoCustomText,
-                    settings.promoNeonColor,
-                    settings.allowedDomains
-                ]);
-            }
+                settings.appLogoUrl,
+                settings.ticketLogoUrl,
+                settings.bannerVideoUrl,
+                settings.promoEnabled,
+                settings.promoCustomText,
+                settings.promoNeonColor,
+                settings.allowedDomains
+            ]);
+        }
 
-            // 2. Events (Full Replace Strategy for simplicity/parity)
-            if (Array.isArray(events)) {
-                // First delete all events to ensure removed ones are gone
-                // Note: This might cascade delete tickets if foreign keys exist. 
-                // Ideally we should Upsert, but legacy app expects full overwrite.
-                // Risk: Deleting event deletes tickets? 
-                // Check schema: tickets references events(id). If we delete event, we lose tickets?
-                // Schema likely has NO cascade or RESTRICT.
-                // If we blindly delete, we might fail.
-                // Better strategy: UPSERT each event.
-                for (const event of events) {
-                    await client.query(`
+        // 2. Events (Full Replace Strategy for simplicity/parity)
+        if (Array.isArray(events)) {
+            // First delete all events to ensure removed ones are gone
+            // Note: This might cascade delete tickets if foreign keys exist. 
+            // Ideally we should Upsert, but legacy app expects full overwrite.
+            // Risk: Deleting event deletes tickets? 
+            // Check schema: tickets references events(id). If we delete event, we lose tickets?
+            // Schema likely has NO cascade or RESTRICT.
+            // If we blindly delete, we might fail.
+            // Better strategy: UPSERT each event.
+            for (const event of events) {
+                await client.query(`
                     INSERT INTO events (id, name, date, description, price, poster_image_url, ticket_capacity, tickets_sold, gallery_images, is_archived)
                     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
                     ON CONFLICT (id) DO UPDATE SET
@@ -100,30 +101,30 @@ router.get('/', async (req: Request, res: Response) => {
                         gallery_images = EXCLUDED.gallery_images,
                         is_archived = EXCLUDED.is_archived
                 `, [
-                        event.id, event.name, event.date, event.description, event.price,
-                        event.posterImageUrl, event.ticketCapacity, event.ticketsSold,
-                        JSON.stringify(event.galleryImages), event.isArchived
-                    ]);
-                }
-                // What about deletions? 
-                // If ID triggers conflict, we update. 
-                // If user deleted event in UI, it won't be in `events` array.
-                // But we didn't delete it from DB.
-                // We should delete IDs that are NOT in the incoming array.
-                if (events.length > 0) {
-                    const ids = events.map((e: any) => e.id);
-                    await client.query('DELETE FROM events WHERE id NOT IN (' + ids.join(',') + ')');
-                } else {
-                    // Danger: Deleting all events?
-                    // await client.query('DELETE FROM events');
-                    // Let's skip full delete for safety unless empty array explicitly sent intent.
-                }
+                    event.id, event.name, event.date, event.description, event.price,
+                    event.posterImageUrl, event.ticketCapacity, event.ticketsSold,
+                    JSON.stringify(event.galleryImages), event.isArchived
+                ]);
             }
+            // What about deletions? 
+            // If ID triggers conflict, we update. 
+            // If user deleted event in UI, it won't be in `events` array.
+            // But we didn't delete it from DB.
+            // We should delete IDs that are NOT in the incoming array.
+            if (events.length > 0) {
+                const ids = events.map((e: any) => e.id);
+                await client.query('DELETE FROM events WHERE id NOT IN (' + ids.join(',') + ')');
+            } else {
+                // Danger: Deleting all events?
+                // await client.query('DELETE FROM events');
+                // Let's skip full delete for safety unless empty array explicitly sent intent.
+            }
+        }
 
-            // 3. Drags (Upsert + Clean)
-            if (Array.isArray(drags)) {
-                for (const drag of drags) {
-                    await client.query(`
+        // 3. Drags (Upsert + Clean)
+        if (Array.isArray(drags)) {
+            for (const drag of drags) {
+                await client.query(`
                     INSERT INTO drags (id, name, instagram_handle, description, card_color, cover_image_url, gallery_images)
                     VALUES ($1, $2, $3, $4, $5, $6, $7)
                     ON CONFLICT (id) DO UPDATE SET
@@ -134,25 +135,25 @@ router.get('/', async (req: Request, res: Response) => {
                         cover_image_url = EXCLUDED.cover_image_url,
                         gallery_images = EXCLUDED.gallery_images
                 `, [
-                        drag.id, drag.name, drag.instagramHandle, drag.description,
-                        drag.cardColor, drag.coverImageUrl, JSON.stringify(drag.galleryImages)
-                    ]);
-                }
-                if (drags.length > 0) {
-                    const ids = drags.map((d: any) => d.id);
-                    await client.query('DELETE FROM drags WHERE id NOT IN (' + ids.join(',') + ')');
-                }
+                    drag.id, drag.name, drag.instagramHandle, drag.description,
+                    drag.cardColor, drag.coverImageUrl, JSON.stringify(drag.galleryImages)
+                ]);
             }
-
-            await client.query('COMMIT');
-            res.json({ success: true });
-        } catch (error) {
-            await client.query('ROLLBACK');
-            console.error('Error saving state:', error);
-            res.status(500).json({ error: 'Failed to save state' });
-        } finally {
-            client.release();
+            if (drags.length > 0) {
+                const ids = drags.map((d: any) => d.id);
+                await client.query('DELETE FROM drags WHERE id NOT IN (' + ids.join(',') + ')');
+            }
         }
-    });
 
-    export default router;
+        await client.query('COMMIT');
+        res.json({ success: true });
+    } catch (error) {
+        await client.query('ROLLBACK');
+        console.error('Error saving state:', error);
+        res.status(500).json({ error: 'Failed to save state' });
+    } finally {
+        client.release();
+    }
+});
+
+export default router;
