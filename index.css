@@ -19,11 +19,6 @@ body {
     min-height: 100vh;
 }
 
-/* Dynamic padding for promo banner - applied via React */
-body.promo-active {
-    /* Managed by React Layout component */
-}
-
 /* --- 1. FONDO "ALIVE" CRT SCANLINESS --- */
 body::before {
     content: " ";
