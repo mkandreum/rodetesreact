@@ -216,7 +216,7 @@ export const AdminMerch: React.FC = () => {
                                 <label className="block text-xs uppercase text-gray-400 mb-1 font-pixel">Precio (€)</label>
                                 <input
                                     type="number"
-                                    value={newItem.price}
+                                    value={newItem.price === 0 ? '' : newItem.price}
                                     onChange={e => setNewItem({ ...newItem, price: Number(e.target.value) })}
                                     className="w-full bg-black border border-gray-600 p-2 text-white outline-none focus:border-neon-pink"
                                     placeholder="0.00"

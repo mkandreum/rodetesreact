@@ -149,7 +149,7 @@ initDb()
     })
     .catch(err => {
         console.error('Failed to initialize database:', err);
-        process.exit(1);
+        // process.exit(1); // Don't crash container, retry might happen or logs might be needed
     });
 
 // Graceful shutdown

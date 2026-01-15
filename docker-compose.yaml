@@ -16,13 +16,13 @@ services:
         - VITE_ADMIN_PASS=${VITE_ADMIN_PASS:-rodetes}
     restart: always
     expose:
-      - "3000"
+      - "80"
     depends_on:
       db:
         condition: service_healthy
     environment:
       - NODE_ENV=production
-      - PORT=3000
+      - PORT=80
       - DB_HOST=db
       - DB_USER=${DB_USER:-rodetes}
       - DB_PASSWORD=${DB_PASSWORD:-partysecure}
