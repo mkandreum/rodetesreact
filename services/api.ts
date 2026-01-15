@@ -107,6 +107,7 @@ export const api = {
         const res = await fetch(`${API_URL}/api/upload`, {
             method: 'POST',
             body: formData, // No Content-Type header (browser sets it with boundary)
+            credentials: 'include'
         });
 
         if (!res.ok) throw new Error('Upload failed');

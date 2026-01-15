@@ -1,6 +1,7 @@
 import express, { Request, Response } from 'express';
 import session from 'express-session';
 import connectPgSimple from 'connect-pg-simple';
+import compression from 'compression';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import path from 'path';
@@ -30,6 +31,9 @@ const PORT = process.env.PORT || 3001;
 
 // Trust proxy (required for secure cookies behind Nginx/Load Balancer)
 app.set('trust proxy', 1);
+
+// Compression
+app.use(compression());
 
 // CORS configuration
 app.use(cors({

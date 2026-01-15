@@ -5,8 +5,10 @@ const router = express.Router();
 
 // GET aggregated state
 router.get('/', async (req: Request, res: Response) => {
+    let client;
     try {
-        // Fetch all data in parallel
+        client = await pool.connect();
+        // Fetch all data in parallel using the SAME connection
         const [
             events,
             drags,
@@ -14,11 +16,11 @@ router.get('/', async (req: Request, res: Response) => {
             settings,
             scannedTickets
         ] = await Promise.all([
-            pool.query('SELECT * FROM events ORDER BY date ASC'),
-            pool.query('SELECT * FROM drags ORDER BY name ASC'),
-            pool.query('SELECT * FROM merch_items ORDER BY name ASC'),
-            pool.query('SELECT * FROM app_settings WHERE id = 1'),
-            pool.query('SELECT ticket_id, scanned_count FROM scanned_tickets')
+            client.query('SELECT * FROM events ORDER BY date ASC'),
+            client.query('SELECT * FROM drags ORDER BY name ASC'),
+            client.query('SELECT * FROM merch_items ORDER BY name ASC'),
+            client.query('SELECT * FROM app_settings WHERE id = 1'),
+            client.query('SELECT ticket_id, scanned_count FROM scanned_tickets')
         ]);
 
         // Construct state object
@@ -41,6 +43,9 @@ router.get('/', async (req: Request, res: Response) => {
 
     } catch (error) {
         console.error('Error fetching state:', error);
+        res.status(500).json({ error: 'Failed to load state' });
+    } finally {
+        if (client) client.release();
     }
 });
 
