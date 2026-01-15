@@ -70,6 +70,9 @@ export const App: React.FC = () => {
     if (currentPage !== 'home' && adminTapCount < 4) navigate('home');
   };
 
+  // Calculate next event (needed by useEffect below)
+  const nextEvent = state.events.filter(e => !e.isArchived && new Date(e.date) > new Date()).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())[0];
+
   // Scroll reveal effect
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
@@ -88,6 +91,15 @@ export const App: React.FC = () => {
       observer.disconnect();
     };
   }, [currentPage, state.events]);
+
+  // Toggle body class for promo banner
+  useEffect(() => {
+    if (state.promoEnabled && nextEvent) {
+      document.body.classList.add('promo-active');
+    } else {
+      document.body.classList.remove('promo-active');
+    }
+  }, [state.promoEnabled, nextEvent]);
 
   // Modal handlers
   const handleSelectEvent = (event: Event) => {
@@ -144,8 +156,6 @@ export const App: React.FC = () => {
     return <div className="min-h-screen bg-black text-white flex items-center justify-center font-pixel">LOADING...</div>;
   }
 
-  const nextEvent = state.events.filter(e => !e.isArchived && new Date(e.date) > new Date()).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())[0];
-
   return (
     <Layout
       currentPage={currentPage}
@@ -155,6 +165,7 @@ export const App: React.FC = () => {
       nextEvent={nextEvent}
       isAdminLoggedIn={isAdminLoggedIn}
       isMobileMenuOpen={isMobileMenuOpen}
+      appLogoUrl={state.appLogoUrl}
       onLogoTap={handleLogoTap}
       onToggleMenu={() => { setIsMobileMenuOpen(!isMobileMenuOpen); handleSecretTap(); }}
       onNavigate={navigate}

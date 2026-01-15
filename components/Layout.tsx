@@ -11,6 +11,7 @@ interface LayoutProps {
     nextEvent?: { name: string; date: string } | null;
     isAdminLoggedIn: boolean;
     isMobileMenuOpen: boolean;
+    appLogoUrl: string;
     onLogoTap: () => void;
     onToggleMenu: () => void;
     onNavigate: (page: PageId) => void;
@@ -25,6 +26,7 @@ export const Layout: React.FC<LayoutProps> = ({
     nextEvent,
     isAdminLoggedIn,
     isMobileMenuOpen,
+    appLogoUrl,
     onLogoTap,
     onToggleMenu,
     onNavigate
@@ -51,10 +53,15 @@ export const Layout: React.FC<LayoutProps> = ({
             )}
 
             {/* Header */}
-            <header className={`fixed ${promoEnabled && nextEvent ? 'top-10' : 'top-0'} w-full transition-all border-b border-white z-40`}>
+            <header className={`fixed ${promoEnabled && nextEvent ? 'top-10' : 'top-0'} w-full transition-all bg-black border-b-2 border-white z-40`}>
                 <div className="container mx-auto px-4 h-20 flex justify-between items-center">
                     <button onClick={onLogoTap} className="flex-shrink-0 group select-none">
-                        <img src="/logo.png" alt="RODETES" className="h-16 w-auto object-contain glitch-hover" />
+                        <img
+                            src={appLogoUrl || '/logo.png'}
+                            alt="RODETES"
+                            className="h-16 w-auto object-contain glitch-hover"
+                            key={appLogoUrl}
+                        />
                     </button>
 
                     <button onClick={onToggleMenu} className="p-2 text-white hover:text-party-500 transition-colors">
@@ -65,9 +72,9 @@ export const Layout: React.FC<LayoutProps> = ({
 
             {/* Secondary Navigation Bar */}
             {currentPage !== 'admin' && (
-                <div id="secondary-nav-container" className={`fixed ${promoEnabled && nextEvent ? 'top-[120px]' : 'top-20'} w-full transition-all z-30 bg-black/95 backdrop-blur-sm border-b border-gray-800`}>
+                <div id="secondary-nav-container" className={`fixed ${promoEnabled && nextEvent ? 'top-[120px]' : 'top-20'} left-0 right-0 w-full transition-all z-30 bg-black/95 backdrop-blur-sm border-b border-gray-700`}>
                     <div className="container mx-auto px-4">
-                        <nav className="flex justify-end items-center gap-8 py-3">
+                        <nav className="flex justify-around gap-4 py-2">
                             {navItems.map((item) => (
                                 <button
                                     key={item.id}
@@ -113,7 +120,7 @@ export const Layout: React.FC<LayoutProps> = ({
             )}
 
             {/* Main Content */}
-            <main className={`container mx-auto px-4 pb-20 pt-40 ${promoEnabled ? 'mt-10' : ''}`}>
+            <main className={`container mx-auto px-4 sm:px-6 lg:px-8 pb-20 ${promoEnabled && nextEvent ? 'pt-48' : 'pt-40'}`}>
                 {children}
             </main>
 
