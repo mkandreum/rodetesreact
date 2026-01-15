@@ -46,7 +46,7 @@ export const Layout: React.FC<LayoutProps> = ({
                 {/* Promo Banner */}
                 {promoEnabled && nextEvent && (
                     <div id="next-event-promo-container" className="w-full h-10 flex items-center border-b-2 relative" style={{ borderColor: promoNeonColor, boxShadow: `0 0 10px ${promoNeonColor}` }}>
-                        <div id="next-event-promo" style={{ textShadow: `0 0 10px ${promoNeonColor}`, color: promoNeonColor }}>
+                        <div id="next-event-promo" style={{ textShadow: `0 0 10px ${promoNeonColor}`, color: '#FFFF00' }}>
                             {promoCustomText
                                 .replace('{eventName}', nextEvent.name)
                                 .replace('{eventShortDate}', new Date(nextEvent.date).toLocaleDateString())}
@@ -77,10 +77,10 @@ export const Layout: React.FC<LayoutProps> = ({
                                     <li key={item.id} className="flex-shrink-0">
                                         <button
                                             onClick={() => onNavigate(item.id)}
-                                            className={`font-pixel text-lg md:text-xl relative group ${currentPage === item.id ? 'text-party-500' : 'text-gray-400 hover:text-white'}`}
+                                            className={`font-pixel text-lg md:text-xl relative group ${currentPage === item.id ? 'text-white drop-shadow-[0_0_5px_rgba(255,255,255,0.7)]' : 'text-gray-400 hover:text-white'}`}
                                         >
                                             {item.label}
-                                            <span className={`absolute -bottom-1 left-0 w-0 h-0.5 bg-party-500 transition-all group-hover:w-full ${currentPage === item.id ? 'w-full' : ''}`}></span>
+                                            <span className={`absolute -bottom-1 left-0 w-0 h-0.5 bg-white shadow-[0_0_5px_white] transition-all group-hover:w-full ${currentPage === item.id ? 'w-full' : ''}`}></span>
                                         </button>
                                     </li>
                                 ))}

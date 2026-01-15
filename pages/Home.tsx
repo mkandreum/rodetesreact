@@ -19,7 +19,7 @@ export const Home: React.FC<HomeProps> = ({ onSelectEvent, onNavigate }) => {
         <div className="space-y-6">
             {/* Eventos Próximos/Pasados en Inicio */}
             <section>
-                <h2 className="text-3xl font-pixel text-white text-left mb-4 text-glow-white glitch-hover" data-text="EVENTOS">EVENTOS</h2>
+                <h2 className="text-5xl font-pixel text-white text-left mb-4 text-glow-white glitch-hover" data-text="EVENTOS">EVENTOS</h2>
 
                 <div id="home-event-list-container" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
                     {upcomingEvents.length > 0 ? (
