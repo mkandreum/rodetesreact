@@ -73,6 +73,31 @@ export const App: React.FC = () => {
   // Calculate next event (needed by useEffect below)
   const nextEvent = state.events.filter(e => !e.isArchived && new Date(e.date) > new Date()).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())[0];
 
+  // Show minimal loading only if not loaded yet
+  if (!isLoaded) {
+    return (
+      <div className="min-h-screen bg-black">
+        <Layout
+          currentPage={currentPage}
+          promoEnabled={false}
+          promoNeonColor="#F02D7D"
+          promoCustomText=""
+          nextEvent={null}
+          isAdminLoggedIn={isAdminLoggedIn}
+          isMobileMenuOpen={isMobileMenuOpen}
+          appLogoUrl=""
+          onLogoTap={handleLogoTap}
+          onToggleMenu={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          onNavigate={navigate}
+        >
+          <div className="flex items-center justify-center h-64">
+            <p className="font-pixel text-white text-2xl">CARGANDO...</p>
+          </div>
+        </Layout>
+      </div>
+    );
+  }
+
   // Scroll reveal effect
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
