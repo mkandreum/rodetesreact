@@ -90,7 +90,52 @@ export const AdminMerch: React.FC = () => {
 
             {activeTab === 'sales' && (
                 <div className="bg-black/20 overflow-hidden border border-gray-800">
-                    <div className="overflow-x-auto">
+                    {/* Mobile Card View */}
+                    <div className="md:hidden space-y-4 p-4">
+                        {state.merchSales?.slice().reverse().map(sale => (
+                            <div key={sale.saleId} className="bg-gray-800 p-4 border border-gray-600 rounded-none shadow-sm space-y-3">
+                                <div className="flex justify-between items-start">
+                                    <div>
+                                        <p className="text-white font-bold text-lg font-pixel">{sale.nombre}</p>
+                                        <p className="text-xs text-gray-400">{sale.email}</p>
+                                    </div>
+                                    <span className="text-neon-pink font-bold text-xl font-pixel">
+                                        {(sale.itemPrice * sale.quantity).toFixed(2)}€
+                                    </span>
+                                </div>
+                                <div className="text-sm text-gray-300 space-y-1 font-mono">
+                                    <p><span className="text-gray-500 font-bold">ITEM:</span> <span className="text-white uppercase">{sale.itemName}</span> (x{sale.quantity})</p>
+                                    <p><span className="text-gray-500 font-bold">FECHA:</span> {new Date(sale.saleDate).toLocaleDateString()}</p>
+                                    <p><span className="text-gray-500 font-bold">ORIGEN:</span> {sale.dragName || 'Web Merch'}</p>
+                                </div>
+                                <div className="flex justify-between items-center pt-3 border-t border-gray-700">
+                                    {sale.status === 'Delivered' ? (
+                                        <span className="inline-flex items-center gap-1 px-2 py-1 bg-green-900/50 border border-green-500 text-green-400 text-xs font-pixel">
+                                            <CheckCircle className="w-3 h-3" /> ENTREGADO
+                                        </span>
+                                    ) : (
+                                        <span className="inline-flex items-center gap-1 px-2 py-1 bg-yellow-900/50 border border-yellow-500 text-yellow-400 text-xs font-pixel">
+                                            <Clock className="w-3 h-3" /> PENDIENTE
+                                        </span>
+                                    )}
+                                    {sale.status !== 'Delivered' && (
+                                        <button
+                                            onClick={() => updateMerchSaleStatus(sale.saleId, 'Delivered')}
+                                            className="px-4 py-2 bg-gray-700 hover:bg-green-600 text-white text-xs border border-gray-500 hover:border-green-400 uppercase font-pixel transition-colors"
+                                        >
+                                            ENTREGAR
+                                        </button>
+                                    )}
+                                </div>
+                            </div>
+                        ))}
+                        {(!state.merchSales || state.merchSales.length === 0) && (
+                            <p className="text-center text-gray-500 font-pixel py-8">No hay ventas registradas</p>
+                        )}
+                    </div>
+
+                    {/* Desktop Table View */}
+                    <div className="hidden md:block overflow-x-auto">
                         <table className="w-full text-left text-sm font-mono">
                             <thead className="bg-gray-800 text-gray-300 font-pixel text-lg">
                                 <tr>

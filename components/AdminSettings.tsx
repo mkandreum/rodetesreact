@@ -52,10 +52,7 @@ export const AdminSettings: React.FC = () => {
                             <span className="text-gray-500 font-pixel">SIN LOGO</span>
                         )}
                     </div>
-                    <div className="flex gap-2">
-                        <input className="flex-1 bg-black border border-gray-600 p-2 text-white focus:border-neon-pink outline-none" value={state.appLogoUrl || ''} onChange={e => updateSetting('appLogoUrl', e.target.value)} />
-                        <FileUpload onUpload={(url) => updateSetting('appLogoUrl', url)} label="SUBIR" className="w-auto" />
-                    </div>
+                    <FileUpload onUpload={(url) => updateSetting('appLogoUrl', url)} label="SUBIR IMAGEN" className="w-full" />
                 </div>
 
                 <div className="space-y-2">
@@ -67,17 +64,14 @@ export const AdminSettings: React.FC = () => {
                             <span className="text-gray-500 font-pixel">SIN LOGO</span>
                         )}
                     </div>
-                    <div className="flex gap-2">
-                        <input className="flex-1 bg-black border border-gray-600 p-2 text-white focus:border-neon-pink outline-none" value={state.ticketLogoUrl || ''} onChange={e => updateSetting('ticketLogoUrl', e.target.value)} />
-                        <FileUpload onUpload={(url) => updateSetting('ticketLogoUrl', url)} label="SUBIR" className="w-auto" />
-                    </div>
+                    <FileUpload onUpload={(url) => updateSetting('ticketLogoUrl', url)} label="SUBIR IMAGEN" className="w-full" />
                 </div>
             </div>
 
             {/* Banner Video */}
             <div className="space-y-2 pt-4 border-t border-gray-800">
                 <label className="block text-sm font-pixel text-gray-300">BANNER PRINCIPAL (VIDEO/IMAGEN)</label>
-                {state.bannerVideoUrl && (
+                {state.bannerVideoUrl ? (
                     <div className="w-full h-40 bg-black mb-2 overflow-hidden relative border border-gray-600">
                         {state.bannerVideoUrl.endsWith('.mp4') || state.bannerVideoUrl.endsWith('.webm') ? (
                             <video src={state.bannerVideoUrl} className="w-full h-full object-cover" muted autoPlay loop />
@@ -85,11 +79,12 @@ export const AdminSettings: React.FC = () => {
                             <img src={state.bannerVideoUrl} alt="Banner" className="w-full h-full object-cover" />
                         )}
                     </div>
+                ) : (
+                    <div className="w-full h-20 bg-gray-800 border border-gray-600 flex items-center justify-center mb-2">
+                        <span className="text-gray-500 font-pixel">SIN BANNER</span>
+                    </div>
                 )}
-                <div className="flex gap-2">
-                    <input className="flex-1 bg-black border border-gray-600 p-2 text-white focus:border-neon-pink outline-none" value={state.bannerVideoUrl || ''} onChange={e => updateSetting('bannerVideoUrl', e.target.value)} />
-                    <FileUpload onUpload={(url) => updateSetting('bannerVideoUrl', url)} label="SUBIR" accept="image/*,video/mp4,video/webm" className="w-auto" />
-                </div>
+                <FileUpload onUpload={(url) => updateSetting('bannerVideoUrl', url)} label="SUBIR VIDEO/IMAGEN" accept="image/*,video/mp4,video/webm" className="w-full" />
             </div>
 
             {/* Promo Banner */}

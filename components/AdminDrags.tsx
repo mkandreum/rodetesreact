@@ -69,21 +69,21 @@ export const AdminDrags: React.FC = () => {
 
             <ul className="space-y-3">
                 {state.drags.map(d => (
-                    <li key={d.id} className="flex justify-between items-center bg-black p-3 border border-gray-800 hover:border-gray-600 transition-colors">
-                        <div className="flex-1 min-w-0 pr-4">
+                    <li key={d.id} className="flex flex-col md:flex-row justify-between items-start md:items-center bg-black p-4 border border-gray-800 hover:border-gray-600 transition-colors gap-3 md:gap-0">
+                        <div className="flex-1 min-w-0 w-full md:w-auto">
                             <p className="font-pixel truncate text-lg" style={{ color: d.cardColor || 'white' }}>{d.name}</p>
                             <p className="text-xs text-gray-500">Merch Items: {d.merchItems?.length || 0}</p>
                         </div>
-                        <div className="flex gap-2">
+                        <div className="flex gap-2 w-full md:w-auto justify-end border-t md:border-t-0 border-gray-800 pt-3 md:pt-0 mt-1 md:mt-0">
                             <button
                                 onClick={() => { setEditingDrag(d); setShowModal(true); }}
-                                className="text-blue-400 hover:text-blue-300 p-1"
+                                className="text-blue-400 hover:text-blue-300 p-2 border border-gray-800 hover:border-blue-400 rounded-md"
                             >
                                 <Edit size={18} />
                             </button>
                             <button
                                 onClick={() => handleDelete(d.id)}
-                                className="text-red-400 hover:text-red-300 p-1"
+                                className="text-red-400 hover:text-red-300 p-2 border border-gray-800 hover:border-red-400 rounded-md"
                             >
                                 <Trash size={18} />
                             </button>
@@ -106,9 +106,13 @@ export const AdminDrags: React.FC = () => {
                             <div><label className="text-sm font-pixel text-gray-400">INSTAGRAM</label><input className="w-full bg-black border border-gray-700 p-2 text-white focus:border-party-500 outline-none" value={editingDrag.instagramHandle || ''} onChange={e => setEditingDrag({ ...editingDrag, instagramHandle: e.target.value })} /></div>
                             <div><label className="text-sm font-pixel text-gray-400">COLOR CARD (HEX)</label><input className="w-full bg-black border border-gray-700 p-2 text-white h-12 cursor-pointer focus:border-party-500 outline-none" type="color" value={editingDrag.cardColor || '#ffffff'} onChange={e => setEditingDrag({ ...editingDrag, cardColor: e.target.value })} /></div>
                             <div>
-                                <label className="text-sm font-pixel text-gray-400">IMAGEN URL (O SUBIR)</label>
+                                <label className="text-sm font-pixel text-gray-400">IMAGEN COVER</label>
                                 <div className="space-y-2">
-                                    <input className="w-full bg-black border border-gray-700 p-2 text-white focus:border-party-500 outline-none" value={editingDrag.coverImageUrl || ''} onChange={e => setEditingDrag({ ...editingDrag, coverImageUrl: e.target.value })} placeholder="https://..." />
+                                    {editingDrag.coverImageUrl && (
+                                        <div className="w-full h-40 bg-black border border-gray-700 flex items-center justify-center overflow-hidden">
+                                            <img src={editingDrag.coverImageUrl} alt="Preview" className="h-full object-contain" />
+                                        </div>
+                                    )}
                                     <FileUpload onUpload={(url) => setEditingDrag({ ...editingDrag, coverImageUrl: url })} label="SUBIR IMAGEN" />
                                 </div>
                             </div>

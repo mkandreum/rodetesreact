@@ -71,23 +71,23 @@ export const AdminEvents: React.FC = () => {
 
             <ul className="space-y-3">
                 {state.events.map(e => (
-                    <li key={e.id} className="flex justify-between items-center bg-black p-3 border border-gray-800 hover:border-white transition-colors">
-                        <div className="flex-1 min-w-0 pr-4">
+                    <li key={e.id} className="flex flex-col md:flex-row justify-between items-start md:items-center bg-black p-4 border border-gray-800 hover:border-white transition-colors gap-3 md:gap-0">
+                        <div className="flex-1 min-w-0 w-full md:w-auto">
                             <p className="font-pixel truncate text-lg text-white">{e.name}</p>
                             <p className="text-xs text-gray-500">
                                 Sold: {e.ticketsSold}/{e.ticketCapacity} | {new Date(e.date).toLocaleDateString()}
                             </p>
                         </div>
-                        <div className="flex gap-2">
+                        <div className="flex gap-2 w-full md:w-auto justify-end border-t md:border-t-0 border-gray-800 pt-3 md:pt-0 mt-1 md:mt-0">
                             <button
                                 onClick={() => { setEditingEvent(e); setShowModal(true); }}
-                                className="text-blue-400 hover:text-blue-300 p-1 border border-transparent hover:border-blue-400"
+                                className="text-blue-400 hover:text-blue-300 p-2 border border-gray-800 hover:border-blue-400 rounded-md"
                             >
                                 <Edit size={18} />
                             </button>
                             <button
                                 onClick={() => handleDelete(e.id)}
-                                className="text-red-400 hover:text-red-300 p-1 border border-transparent hover:border-red-400"
+                                className="text-red-400 hover:text-red-300 p-2 border border-gray-800 hover:border-red-400 rounded-md"
                             >
                                 <Trash size={18} />
                             </button>
@@ -113,9 +113,13 @@ export const AdminEvents: React.FC = () => {
                                 <div className="flex-1"><label className="text-sm font-pixel text-gray-400">CAPACIDAD</label><input className="w-full bg-black border border-gray-600 p-2 text-white focus:border-party-500 outline-none" type="number" value={editingEvent.ticketCapacity || 0} onChange={e => setEditingEvent({ ...editingEvent, ticketCapacity: parseInt(e.target.value) || 0 })} /></div>
                             </div>
                             <div>
-                                <label className="text-sm font-pixel text-gray-400">IMAGEN URL (O SUBIR)</label>
+                                <label className="text-sm font-pixel text-gray-400">IMAGEN DEL POSTER</label>
                                 <div className="space-y-2">
-                                    <input className="w-full bg-black border border-gray-600 p-2 text-white focus:border-party-500 outline-none" value={editingEvent.posterImageUrl || ''} onChange={e => setEditingEvent({ ...editingEvent, posterImageUrl: e.target.value })} placeholder="https://..." />
+                                    {editingEvent.posterImageUrl && (
+                                        <div className="w-full h-40 bg-black border border-gray-600 flex items-center justify-center overflow-hidden">
+                                            <img src={editingEvent.posterImageUrl} alt="Preview" className="h-full object-contain" />
+                                        </div>
+                                    )}
                                     <FileUpload onUpload={(url) => setEditingEvent({ ...editingEvent, posterImageUrl: url })} label="SUBIR IMAGEN" />
                                 </div>
                             </div>
