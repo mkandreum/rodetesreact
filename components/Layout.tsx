@@ -67,7 +67,7 @@ export const Layout: React.FC<LayoutProps> = ({
             {currentPage !== 'admin' && (
                 <div id="secondary-nav-container" className={`fixed ${promoEnabled && nextEvent ? 'top-[120px]' : 'top-20'} w-full transition-all z-30`}>
                     <div className="container mx-auto">
-                        <nav className="flex justify-around items-center gap-4 py-2">
+                        <nav className="flex justify-around items-center gap-4 py-2 px-4">
                             {navItems.map((item) => (
                                 <button
                                     key={item.id}
