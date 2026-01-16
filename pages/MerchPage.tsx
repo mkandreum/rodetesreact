@@ -9,12 +9,20 @@ interface MerchPageProps {
 export const MerchPage: React.FC<MerchPageProps> = ({ onSelectMerch }) => {
     const { state } = useStore();
 
+    const getImageUrl = (url: string) => {
+        if (!url) return '';
+        if (url.startsWith('http://localhost') || url.startsWith('http://127.0.0.1')) {
+            return url.replace(/^(?:https?:\/\/)?(?:localhost|127\.0\.0\.1)(?::\d+)?/, '');
+        }
+        return url;
+    };
+
     const renderMerchCard = (item: MerchItem, drag: Drag | null) => (
         <div key={item.id} className="bg-gray-900 border border-gray-800 hover:border-gray-600 transition-all flex flex-col">
             <div className="aspect-square bg-black relative overflow-hidden">
                 {item.imageUrl && (
                     <img
-                        src={item.imageUrl}
+                        src={getImageUrl(item.imageUrl)}
                         alt={item.name}
                         className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
                     />
