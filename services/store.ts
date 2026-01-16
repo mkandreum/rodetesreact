@@ -33,7 +33,11 @@ export const useStore = () => {
     }
   });
 
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(() => {
+    // If we have cached state, we are technically "loaded" enough to show UI
+    // The API fetch will simply update it shortly after.
+    return !!localStorage.getItem('rodetes_state');
+  });
   const [error, setError] = useState<string | null>(null);
 
   // Load initial data from API and update cache

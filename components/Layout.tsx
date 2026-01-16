@@ -45,7 +45,7 @@ export const Layout: React.FC<LayoutProps> = ({
             <div className="sticky top-0 z-50 bg-black w-full shadow-lg border-b border-gray-800">
                 {/* Promo Banner */}
                 {promoEnabled && nextEvent && (
-                    <div id="next-event-promo-container" className="w-full h-10 flex items-center border-b-2 relative" style={{ borderColor: promoNeonColor, boxShadow: `0 4px 20px ${promoNeonColor}, 0 0 10px ${promoNeonColor}` }}>
+                    <div id="next-event-promo-container" className="w-full h-10 flex items-center relative transition-shadow duration-500" style={{ boxShadow: `0 10px 30px -5px ${promoNeonColor}, 0 4px 10px -2px ${promoNeonColor}` }}>
                         <div id="next-event-promo" className="text-glow-yellow" style={{ color: '#FFFF00' }}>
                             {promoCustomText
                                 .replace('{eventName}', nextEvent.name)
