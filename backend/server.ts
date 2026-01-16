@@ -38,6 +38,15 @@ const PORT = process.env.PORT || 80;
 // Middleware
 // ============================================
 
+// request logging (Moved to top to debug 504)
+app.use((req: Request, res: Response, next) => {
+    console.log(`[REQUEST] ${new Date().toISOString()} ${req.method} ${req.path} - IP: ${req.ip}`);
+    next();
+});
+
+// Simple ping to bypass session/DB
+app.get('/ping', (req, res) => res.send('pong'));
+
 // Trust proxy (required for secure cookies behind Nginx/Load Balancer)
 // Setting to true trusts standard headers (X-Forwarded-Proto, etc.) from any proxy, which is robust for Cloudflare+Coolify
 app.set('trust proxy', true);
@@ -76,10 +85,7 @@ app.use(session({
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 // Request logging
-app.use((req: Request, res: Response, next) => {
-    console.log(`${new Date().toISOString()} ${req.method} ${req.path}`);
-    next();
-});
+
 
 // ============================================
 // Routes
