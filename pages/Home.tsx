@@ -15,45 +15,53 @@ export const Home: React.FC<HomeProps> = ({ onSelectEvent, onNavigate }) => {
     const pastEvents = state.events.filter(e => !e.isArchived && new Date(e.date) < new Date()).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
     const recentPastEvent = pastEvents[0];
 
+    // Logic for Random Gallery
+    const pastEventsWithGallery = pastEvents.filter(e => e.galleryImages && e.galleryImages.length > 0);
+    const randomGalleryEvent = pastEventsWithGallery.length > 0
+        ? pastEventsWithGallery[Math.floor(Math.random() * pastEventsWithGallery.length)]
+        : null;
+
     return (
         <div className="space-y-6 page-fade-in">
             {/* Eventos Próximos/Pasados en Inicio */}
             <section>
-                <h2 className="text-5xl font-pixel text-white text-left mb-4 text-glow-white glitch-hover" data-text="EVENTOS">EVENTOS</h2>
+                {/* Title Removed as requested */}
 
                 <div id="home-event-list-container" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-                    {upcomingEvents.length > 0 ? (
-                        upcomingEvents.map(event => (
-                            <div key={event.id} className="relative bg-gray-900 rounded-none overflow-hidden flex flex-col transform transition-all duration-300 reveal-on-scroll visible hover:border-gray-300 hover:shadow-white/30 border-white border">
-                                <div className="absolute top-0 left-0 text-white font-pixel text-sm px-2 py-1 rounded-none border-b border-r border-black z-10 shadow-md" style={{ backgroundColor: '#F02D7D' }}>
-                                    PRÓXIMO EVENTO
-                                </div>
-                                <div className="w-full bg-black border-b border-white overflow-hidden cursor-pointer" onClick={() => onSelectEvent(event)}>
-                                    <img src={event.posterImageUrl} alt={event.name} className="w-full object-cover" />
-                                </div>
-                                <div className="p-6 flex flex-col flex-grow">
-                                    <h3 className="text-3xl font-pixel text-white text-glow-white mb-2 cursor-pointer glitch-hover" onClick={() => onSelectEvent(event)}>
-                                        {event.name}
-                                    </h3>
-                                    <p className="text-gray-400 font-semibold font-pixel text-lg mb-3">{new Date(event.date).toLocaleDateString()}, 21:00</p>
-                                    <p className="text-4xl font-extrabold text-white mb-4">{event.price} €</p>
-                                    <p className="text-gray-400 mb-6 flex-grow whitespace-pre-wrap font-sans text-sm">
-                                        {event.description}
-                                    </p>
-                                    <button
-                                        onClick={() => onSelectEvent(event)}
-                                        className="w-full neon-btn font-pixel text-2xl py-3 px-4 rounded-none"
-                                        disabled={event.ticketsSold >= event.ticketCapacity && event.ticketCapacity > 0}
-                                    >
-                                        {event.ticketsSold >= event.ticketCapacity && event.ticketCapacity > 0 ? 'AGOTADO' : 'CONSEGUIR ENTRADA'}
-                                    </button>
-                                </div>
+                    {/* Active Events */}
+                    {upcomingEvents.map(event => (
+                        <div key={event.id} className="relative bg-gray-900 rounded-none overflow-hidden flex flex-col transform transition-all duration-300 reveal-on-scroll visible"> {/* Border removed */}
+                            <div className="absolute top-0 left-0 text-white font-pixel text-sm px-2 py-1 rounded-none border-b border-r border-black z-10 shadow-md" style={{ backgroundColor: '#F02D7D' }}>
+                                PRÓXIMO EVENTO
                             </div>
-                        ))
-                    ) : recentPastEvent ? (
-                        <div className="relative bg-gray-900 rounded-none overflow-hidden flex flex-col transform transition-all duration-300 reveal-on-scroll visible hover:border-gray-300 hover:shadow-white/30 border-white border">
+                            <div className="w-full bg-black border-none overflow-hidden cursor-pointer" onClick={() => onSelectEvent(event)}>
+                                <img src={event.posterImageUrl} alt={event.name} className="w-full object-cover" />
+                            </div>
+                            <div className="p-6 flex flex-col flex-grow">
+                                <h3 className="text-3xl font-pixel text-white text-glow-white mb-2 cursor-pointer glitch-hover" onClick={() => onSelectEvent(event)}>
+                                    {event.name}
+                                </h3>
+                                <p className="text-gray-400 font-semibold font-pixel text-lg mb-3">{new Date(event.date).toLocaleDateString()}, 21:00</p>
+                                <p className="text-4xl font-extrabold text-white mb-4">{event.price} €</p>
+                                <p className="text-gray-400 mb-6 flex-grow whitespace-pre-wrap font-sans text-sm">
+                                    {event.description}
+                                </p>
+                                <button
+                                    onClick={() => onSelectEvent(event)}
+                                    className="w-full neon-btn font-pixel text-2xl py-3 px-4 rounded-none"
+                                    disabled={event.ticketsSold >= event.ticketCapacity && event.ticketCapacity > 0}
+                                >
+                                    {event.ticketsSold >= event.ticketCapacity && event.ticketCapacity > 0 ? 'AGOTADO' : 'CONSEGUIR ENTRADA'}
+                                </button>
+                            </div>
+                        </div>
+                    ))}
+
+                    {/* Recent Past Event (Shown below/alongside if exists) */}
+                    {recentPastEvent && (
+                        <div className="relative bg-gray-900 rounded-none overflow-hidden flex flex-col transform transition-all duration-300 reveal-on-scroll visible"> {/* Border removed */}
                             <div className="absolute top-0 left-0 bg-red-700 text-white font-pixel text-sm px-2 py-1 rounded-none border-b border-r border-black z-10 shadow-md">FINALIZADO</div>
-                            <div className="w-full bg-black border-b border-white overflow-hidden">
+                            <div className="w-full bg-black border-none overflow-hidden">
                                 <img src={recentPastEvent.posterImageUrl} alt={recentPastEvent.name} className="w-full opacity-60" />
                             </div>
                             <div className="p-6 flex flex-col flex-grow">
@@ -68,11 +76,32 @@ export const Home: React.FC<HomeProps> = ({ onSelectEvent, onNavigate }) => {
                                 <button disabled className="w-full bg-gray-800 text-gray-500 font-pixel text-2xl py-3 px-4 rounded-none border border-gray-700 cursor-not-allowed">EVENTO FINALIZADO</button>
                             </div>
                         </div>
-                    ) : (
+                    )}
+
+                    {upcomingEvents.length === 0 && !recentPastEvent && (
                         <p className="text-center font-pixel text-gray-500 col-span-full text-2xl">NO HAY EVENTOS</p>
                     )}
                 </div>
             </section>
+
+            {/* Random Gallery Section */}
+            {randomGalleryEvent && (
+                <section className="mb-12 text-center" onClick={() => onNavigate('gallery')}>
+                    <h2 className="text-4xl font-pixel text-white text-glow-white mb-6">GALERÍAS DE EVENTOS PASADOS</h2>
+                    <div className="border border-white p-2 inline-block cursor-pointer hover:scale-105 transition-transform duration-300">
+                        <img
+                            src={randomGalleryEvent.galleryImages[0]}
+                            alt={`Galería ${randomGalleryEvent.name}`}
+                            className="max-h-[400px] object-cover"
+                        />
+                        <div className="bg-gray-900 p-4 mt-2">
+                            <h3 className="text-2xl font-pixel text-white text-glow-white mb-1">{randomGalleryEvent.name.toUpperCase()}</h3>
+                            <p className="text-gray-400 font-pixel uppercase">{new Date(randomGalleryEvent.date).toLocaleString('es-ES', { month: 'long', year: 'numeric' })}</p>
+                            <p className="text-gray-500 font-pixel mt-2">{randomGalleryEvent.galleryImages.length} FOTOS</p>
+                        </div>
+                    </div>
+                </section>
+            )}
 
             {/* Botón Ver Todos los Eventos */}
             <div id="view-all-events-container" className="text-center mb-12">

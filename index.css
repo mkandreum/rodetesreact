@@ -197,6 +197,12 @@ header {
     text-shadow: 0 0 5px var(--neon-pink), 0 0 10px var(--neon-pink);
 }
 
+.text-glow-yellow {
+    text-shadow: 0 0 5px var(--neon-yellow), 0 0 15px var(--neon-yellow), 0 0 30px var(--neon-yellow);
+    filter: blur(0.5px);
+    /* Slight blur for the 'diffused' look */
+}
+
 .spinner {
     animation: spin 1s linear infinite;
 }

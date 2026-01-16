@@ -14,7 +14,7 @@ export const EventsPage: React.FC<EventsPageProps> = ({ onSelectEvent }) => {
             <h2 className="text-5xl font-pixel text-white text-left mb-8 text-glow-white">EVENTOS</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {state.events.filter(e => !e.isArchived).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()).map(event => (
-                    <div key={event.id} className="relative bg-gray-900 rounded-none overflow-hidden flex flex-col transform transition-all duration-300 border border-white hover:border-gray-300 hover:shadow-white/30">
+                    <div key={event.id} className="relative bg-gray-900 rounded-none overflow-hidden flex flex-col transform transition-all duration-300 reveal-on-scroll visible">
                         {new Date(event.date) > new Date() && (
                             <div className="absolute top-0 left-0 text-white font-pixel text-sm px-2 py-1 rounded-none border-b border-r border-black z-10 shadow-md" style={{ backgroundColor: '#F02D7D' }}>
                                 PRÓXIMO EVENTO
@@ -23,7 +23,7 @@ export const EventsPage: React.FC<EventsPageProps> = ({ onSelectEvent }) => {
                         {new Date(event.date) < new Date() && (
                             <div className="absolute top-0 left-0 bg-red-700 text-white font-pixel text-sm px-2 py-1 rounded-none border-b border-r border-black z-10 shadow-md">FINALIZADO</div>
                         )}
-                        <div className="w-full bg-black border-b border-white overflow-hidden cursor-pointer" onClick={() => onSelectEvent(event)}>
+                        <div className="w-full bg-black border-none overflow-hidden cursor-pointer" onClick={() => onSelectEvent(event)}>
                             <img src={event.posterImageUrl} alt={event.name} className={`w-full object-cover ${new Date(event.date) < new Date() ? 'opacity-60' : ''}`} />
                         </div>
                         <div className="p-6 flex flex-col flex-grow">
