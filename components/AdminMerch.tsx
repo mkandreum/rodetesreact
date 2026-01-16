@@ -22,18 +22,15 @@ export const AdminMerch: React.FC = () => {
 
         setIsSubmitting(true);
         try {
-            // API call to create item
+            // Backend expects snake_case
             await api.addMerchItem({
-                ...newItem,
-                drag_id: newItem.dragId || null // API expects drag_id snake_case or we handled it? 
-                // api.addMerchItem body is JSON.stringify(data). 
-                // My backend `merch.js` expects `drag_id`.
-                // Typescript interface has `dragId`.
-                // I should map it manually here or update `api.ts` to snakeCase request body?
-                // Let's map manually to be safe.
+                name: newItem.name,
+                price: newItem.price,
+                image_url: newItem.imageUrl, // Map camelCase to snake_case
+                drag_id: newItem.dragId || null
             });
             // Refresh state
-            window.location.reload(); // Simple refresh for now or add to state
+            window.location.reload();
         } catch (err) {
             console.error(err);
         } finally {

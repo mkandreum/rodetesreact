@@ -8,7 +8,6 @@ router.get('/', async (req: Request, res: Response) => {
     let client;
     try {
         client = await pool.connect();
-        // Fetch all data in parallel using the SAME connection
         // Fetch all data sequentially using the SAME connection to avoid pool exhaustion
         // Note: pg.Client does not support concurrent queries
         const events = await client.query('SELECT * FROM events ORDER BY date ASC');
